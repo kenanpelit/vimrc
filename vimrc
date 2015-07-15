@@ -318,7 +318,7 @@ if count(s:settings.plugin_groups, 'core') "{{{
     vmap <c-up> [egv
     vmap <c-down> ]egv
     "}}}
-    NeoBundle 'Shougo/vimproc.vim', {'build': {'unix': 'make -f make_unix.mak'}}
+    NeoBundle 'Shougo/vimproc.vim', {'build': {'linux': 'make'}}
 endif "}}}
 
 if count(s:settings.plugin_groups, 'web') "{{{
