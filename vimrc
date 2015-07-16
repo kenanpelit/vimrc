@@ -4,7 +4,7 @@
 "                        \ V /| | | | | | | | | (__
 " kenp                  (_)_/ |_|_| |_| |_|_|  \___|
 "*****************************************************************************
-" NeoBundle core
+"" NeoBundle core
 "*****************************************************************************
 " Note: Skip initialization for vim-tiny or vim-small.
 if !1 | finish | endif
@@ -34,6 +34,12 @@ let s:settings.max_column=80
 let s:settings.enable_cursorcolumn=1
 let s:settings.autocomplete_method='ycm'
 
+if has('lua')
+    let s:settings.autocomplete_method = 'neocomplete'
+elseif filereadable(expand("~/.vim/bundle/YouCompleteMe/python/ycm_core.*"))
+    let s:settings.autocomplete_method = 'ycm'
+endif
+
 if exists('g:dotvim_settings.plugin_groups')
     let s:settings.plugin_groups = g:dotvim_settings.plugin_groups
 else
@@ -47,6 +53,7 @@ else
     call add(s:settings.plugin_groups, 'editing')
     call add(s:settings.plugin_groups, 'indents')
     call add(s:settings.plugin_groups, 'navigation')
+    call add(s:settings.plugin_groups, 'ctrlp')
     call add(s:settings.plugin_groups, 'unite')
     call add(s:settings.plugin_groups, 'autocomplete')
     call add(s:settings.plugin_groups, 'misc')
@@ -64,7 +71,7 @@ else
     endfor
 
     if exists('g:dotvim_settings.plugin_groups_include')
-        for group in g:dotvim_settings.plugin_groups_include =['python','bash']
+        for group in g:dotvim_settings.plugin_groups_include =['python', 'bash']
             call add(s:settings.plugin_groups, group)
         endfor
     endif
@@ -373,6 +380,7 @@ if count(s:settings.plugin_groups, 'scm') "{{{
     nnoremap <silent> <leader>gp :Git push<CR>
     nnoremap <silent> <leader>gw :Gwrite<CR>
     nnoremap <silent> <leader>gr :Gremove<CR>
+    autocmd FileType gitcommit nmap <buffer> U :Git checkout -- <C-r><C-g><CR>
     autocmd BufReadPost fugitive://* set bufhidden=delete
     "}}}
     NeoBundleLazy 'gregsexton/gitv', {'depends':['tpope/vim-fugitive'], 'autoload':{'commands':'Gitv'}} "{{{
@@ -411,13 +419,6 @@ if count(s:settings.plugin_groups, 'autocomplete') "{{{
         NeoBundleLazy 'Shougo/neocomplete.vim', {'autoload':{'insert':1}, 'vim_version':'7.3.885'} "{{{
         let g:neocomplete#enable_at_startup=1
         let g:neocomplete#data_directory=s:get_cache_dir('neocomplete')
-        "}}}
-    endif "}}}
-    if s:settings.autocomplete_method == 'neocomplcache' "{{{
-        NeoBundleLazy 'Shougo/neocomplcache.vim', {'autoload':{'insert':1}} "{{{
-        let g:neocomplcache_enable_at_startup=1
-        let g:neocomplcache_temporary_dir=s:get_cache_dir('neocomplcache')
-        let g:neocomplcache_enable_fuzzy_completion=1
         "}}}
     endif "}}}
 endif "}}}
@@ -473,37 +474,6 @@ if count(s:settings.plugin_groups, 'navigation') "{{{
     let g:EasyGrepCommand=1
     nnoremap <leader>vo :GrepOptions<cr>
     "}}}
-    NeoBundle 'ctrlpvim/ctrlp.vim', { 'depends': 'tacahiroy/ctrlp-funky' } "{{{
-    let g:ctrlp_clear_cache_on_exit=0
-    let g:ctrlp_use_caching=1
-    let g:ctrlp_open_new_file='rw'
-    let g:ctrlp_max_height=20
-    let g:ctrlp_show_hidden=1
-    let g:ctrlp_follow_symlinks=1
-    let g:ctrlp_max_files=20000
-    let g:ctrlp_cache_dir=s:get_cache_dir('ctrlp')
-    let g:ctrlp_reuse_window='startify'
-    let g:ctrlp_extensions=['funky']
-    set wildmode=list:longest,list:full
-    set wildignore+=*/tmp/*,*.o,*.obj,.git,*.rbc,*.mp3,*.flac,*.avi,*.svg,*.jpg,*.png,*.so,*.a,*.swp,*.zip,*.pyc,*.pyo,*.classh,__pycache__
-    let g:ctrlp_custom_ignore = '\Trash$\|\.git$\|\.hg$\|\.cache$\|\.svn$\|public\|\images\|
-                \ \public\|system\|data\|log\|\tmp$\|\.exe$\|\.so$\|\.dat$\|\Library\|\Download\|
-                \ \Music\|\Movies\|Pictures\|undo\|chromium\|\.pdf$\|\.epub$\|\.mobi$\|\.rar$\|\.png$\|
-                \ \.jpg$\|\.dmg$\|\.nib$\|\.bz$\|\.gz$\|\.tar$\|\.avi\|\.mp3$\|\.flac\|\.mp4$\|\.xib$'
-    "let g:ctrlp_user_command = "find %s -type f | grep -Ev '"+ g:ctrlp_custom_ignore +"'"
-    if executable('ag')
-        let g:ctrlp_user_command="ag %s -l --nocolor -g '"+ g:ctrlp_custom_ignore +"'"
-    endif
-    nmap \ [ctrlp]
-    nnoremap [ctrlp] <nop>
-    nnoremap [ctrlp]t :CtrlPBufTag<cr>
-    nnoremap [ctrlp]T :CtrlPTag<cr>
-    nnoremap [ctrlp]l :CtrlPLine<cr>
-    nnoremap [ctrlp]o :CtrlPFunky<cr>
-    nnoremap [ctrlp]b :CtrlPBuffer<cr>
-    "}}}
-    NeoBundle 'mattn/ctrlp-mark' "{{{
-    "}}}
     NeoBundleLazy 'scrooloose/nerdtree', {'autoload':{'commands':['NERDTreeToggle','NERDTreeFind']}} "{{{
     let NERDTreeShowHidden=1
     let NERDTreeQuitOnOpen=0
@@ -516,7 +486,7 @@ if count(s:settings.plugin_groups, 'navigation') "{{{
     let NERDTreeIgnore=['\.git','\.hg']
     let NERDTreeBookmarksFile=s:get_cache_dir('NERDTreeBookmarks')
     nnoremap <leader>9 :NERDTreeToggle<CR>
-    nnoremap <F3> :NERDTreeFind<CR>
+    nnoremap <leader>8 :NERDTreeFind<CR>
     "}}}
     NeoBundle 'jistr/vim-nerdtree-tabs' "{{{
     let g:nerdtree_tabs_open_on_gui_startup=0
@@ -531,16 +501,13 @@ if count(s:settings.plugin_groups, 'navigation') "{{{
     filetype plugin on
     let NERDMenuMode=0
     let NERDSpaceDelims=1
-    nmap <leader>7 :call NERDComment(0, "toggle")<cr>
-    vmap <leader>7 :call NERDComment(0, "toggle")<cr>")"
+    nmap <leader>6 :call NERDComment(0, "toggle")<cr>
+    vmap <leader>6 :call NERDComment(0, "toggle")<cr>")"
     "}}}
     NeoBundle 'Xuyuanp/nerdtree-git-plugin', {'depends': 'tpope/vim-fugitive'} "{{{
     "let g:loaded_nerdtree_fugitive=1
     let g:NERDTreeMapNextHunk=",n"
     let g:NERDTreeMapPrevHunk=",p"
-    "}}}
-    NeoBundle 'voronkovich/ctrlp-nerdtree.vim' "{{{
-    let g:ctrlp_nerdtree_show_hidden=1
     "}}}
     NeoBundle 'rhysd/clever-f.vim' "{{{
     "}}}
@@ -582,7 +549,61 @@ if count(s:settings.plugin_groups, 'navigation') "{{{
     highlight BookmarkAnnotationLine ctermbg=23 ctermfg=NONE
     "}}}
     NeoBundleLazy 'majutsushi/tagbar', {'autoload':{'commands':'TagbarToggle'}} "{{{
-    nnoremap <silent> <leader>6 :TagbarToggle<CR>
+    nnoremap <silent> <leader>4 :TagbarToggle<CR>
+    "}}}
+    NeoBundle 'easymotion/vim-easymotion'
+    let g:EasyMotion_do_mapping = 0
+    let g:EasyMotion_smartcase = 1
+    map <Leader>k <Plug>(easymotion-j)
+    map <Leader>m <Plug>(easymotion-k)vi
+    nmap s <Plug>(easymotion-s)
+    nmap s <Plug>(easymotion-s2)
+    "}}}
+endif "}}}
+
+if count(s:settings.plugin_groups, 'ctrlp') "{{{
+    NeoBundle 'ctrlpvim/ctrlp.vim', { 'depends': 'tacahiroy/ctrlp-funky' } "{{{
+    NeoBundle 'mattn/ctrlp-mark'
+    NeoBundle 'DavidEGx/ctrlp-smarttabs'
+    NeoBundle 'sgur/ctrlp-extensions.vim'
+    NeoBundle 'jasoncodes/ctrlp-modified.vim'
+    NeoBundle 'voronkovich/ctrlp-nerdtree.vim'
+    NeoBundle 'FelikZ/ctrlp-py-matcher'
+    let g:airline#extensions#tabline#enabled = 1
+    let g:ctrlp_cache_dir=s:get_cache_dir('ctrlp')
+    let g:ctrlp_clear_cache_on_exit=0
+    let g:ctrlp_use_caching=1
+    let g:ctrlp_open_new_file='rw'
+    let g:ctrlp_max_height=20
+    let g:ctrlp_show_hidden=1
+    let g:ctrlp_follow_symlinks=1
+    let g:ctrlp_max_files=20000
+    let g:ctrlp_yankring_limit = 100
+    let g:ctrlp_yankring_minimum_chars = 2
+    let g:ctrlp_cmdpalette_execute = 1
+    let g:ctrlp_nerdtree_show_hidden=1
+    let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
+    let g:ctrlp_reuse_window='startify'
+    let g:ctrlp_extensions = ['smarttabs', 'buffer', 'line', 'changes',
+                \'mixed', 'cmdpalette', 'funky', 'autoignore', 'mark']
+    set wildmode=list:longest,list:full
+    set wildignore+=*/tmp/*,*.o,*.obj,.git,*.rbc,*.mp3,*.flac,*.avi,*.svg,*.jpg,*.png,*.so,*.a,*.swp,*.zip,*.pyc,*.pyo,*.classh,__pycache__
+    let g:ctrlp_custom_ignore = '\Trash\|\.git$\|\.hg$\|\.cache$\|\.svn$\|public\|\images\|
+                \ \public\|system\|data\|log\|\tmp$\|\.exe$\|\.so$\|\.dat$\|\Library\|\Download\|\.fonts\|
+                \ \Music\|\Movies\|Pictures\|undo\|chromium\|\.thunderbird\|\.pdf$\|\.epub$\|\.gitmodules$\|\.mobi$\|\.rar$\|\.png$\|
+                \ \.jpg$\|\.dmg$\|\.nib$\|\.bz$\|\.gz$\|\.tar$\|\.avi\|\.mp3$\|\.flac\|\.mp4$\|\.gitmodules$\|\.xib$'
+    if executable('ag') "{{{
+        let g:ctrlp_user_command="ag %s -l --nocolor -g '"+ g:ctrlp_custom_ignore +"'"
+    endif
+    "}}}
+    nmap <LocalLeader> [ctrlp]
+    nnoremap [ctrlp] <nop>
+    nnoremap [ctrlp]t :CtrlPBufTag<cr>
+    nnoremap [ctrlp]l :CtrlPLine<cr>
+    nnoremap [ctrlp]b :CtrlPBuffer<cr>
+    nnoremap [ctrlp]e :CtrlPModified<cr>
+    nnoremap [ctrlp]g :CtrlPBranch<cr>
+    nnoremap [ctrlp]o :CtrlPFunky<cr>
     "}}}
 endif "}}}
 
@@ -593,9 +614,9 @@ if count(s:settings.plugin_groups, 'unite') "{{{
         call unite#filters#matcher_default#use(['matcher_fuzzy'])
         call unite#filters#sorter_default#use(['sorter_rank'])
         call unite#custom#source('file_mru,file_rec,file_rec/async,grep,locate',
-                    \ 'ignore_pattern', join(['\.git/', 'tmp/', 'bundle/', '.pip/',
-                    \ '.mozilla/', '.thunderbird/', '.local/share/', '.local/lib/',
-                    \ '.config/', '.gnome*', '.gconf/', 'Music/', 'Downloads/'], '\|'))
+                    \ 'ignore_pattern', join(['\.git/', 'tmp/', 'bundle/', '.pip/', '.fonts/',
+                    \ '.mozilla/', '.thunderbird/', '.cache/', '.ccache/', '.local/share/', '.local/lib/',
+                    \ '.config/', '.gnome*', '.gconf/', '.purple/', '.macromedia/', 'Music/', 'Downloads/'], '\|'))
         call unite#custom#profile('default', 'context', {
                     \ 'start_insert': 1
                     \ })
@@ -609,18 +630,16 @@ if count(s:settings.plugin_groups, 'unite') "{{{
     let g:unite_enable_short_source_mes = 0
     let g:unite_force_overwrite_statusline = 0
     let g:unite_update_time = 200
-
-    "let g:unite_split_rule = 'botright'
     let g:unite_prompt='❯❯❯ '
     let g:unite_marked_icon='✓'
-
     let g:unite_source_buffer_time_format='(%d-%m-%Y %H:%M:%S) '
     let g:unite_source_file_mru_time_format='(%d-%m-%Y %H:%M:%S) '
     let g:unite_source_directory_mru_time_format='(%d-%m-%Y %H:%M:%S) '
 
     if executable('ag')
         let g:unite_source_grep_command='ag'
-        let g:unite_source_grep_default_opts='--nocolor --line-numbers --nogroup -S -C4'
+        "let g:unite_source_grep_default_opts='--nocolor --line-numbers --nogroup -S -C4'
+        let g:unite_source_grep_default_opts="ag %s -l --line-numbers --nocolor -g '"+ g:ctrlp_custom_ignore +"'"
         let g:unite_source_grep_recursive_opt=''
         let g:unite_source_grep_search_word_highlight = 1
     elseif executable('ack')
@@ -639,6 +658,7 @@ if count(s:settings.plugin_groups, 'unite') "{{{
 
     nmap <space> [unite]
     nnoremap [unite] <nop>
+
     nmap <LocalLeader> [menu]
     nnoremap <silent>[menu]u :Unite -silent -winheight=12 menu<CR>
 
@@ -674,14 +694,21 @@ if count(s:settings.plugin_groups, 'unite') "{{{
     let g:junkfile#directory=s:get_cache_dir('junk')
     nnoremap <silent> [unite]j :<C-u>Unite -auto-resize -buffer-name=junk junkfile junkfile/new<cr>
     "}}}
-    NeoBundleLazy 'Shougo/unite-session', {'autoload':{'unite_sources':'session', 'commands': ['UniteSessionSave', 'UniteSessionLoad']}               }
+    NeoBundleLazy 'Shougo/unite-session', {'autoload':{'unite_sources':'session', 'commands': ['UniteSessionSave', 'UniteSessionLoad']}} "{{{
     "}}}
-    NeoBundleLazy 'osyo-manga/unite-quickfix', {'autoload':{'unite_sources': ['quickfix', 'location_list']}}
-    NeoBundleLazy 'thinca/vim-unite-history', { 'autoload' : { 'unite_sources' : ['history/command', 'history/search']}}
-    NeoBundleLazy 'ujihisa/unite-colorscheme', {'autoload':{'unite_sources': 'colorscheme'}}
-    NeoBundleLazy 'klen/unite-radio.vim', {'autoload':{'unite_sources':'radio'}}
+    NeoBundleLazy 'osyo-manga/unite-quickfix', {'autoload':{'unite_sources': ['quickfix', 'location_list']}} "{{{
+    "}}}
+    NeoBundleLazy 'thinca/vim-unite-history', { 'autoload' : { 'unite_sources' : ['history/command', 'history/search']}} "{{{
+    "}}}
+    NeoBundleLazy 'ujihisa/unite-colorscheme', {'autoload':{'unite_sources': 'colorscheme'}} "{{{
+    "}}}
+    NeoBundleLazy 'klen/unite-radio.vim', {'autoload':{'unite_sources':'radio'}} "{{{
+    "}}}
+    NeoBundleLazy 'lambdalisue/vim-gista', {'depends': ['Shougo/unite.vim', 'tyru/open-browser.vim'],
+                \ 'autoload': {'commands': ['Gista'], 'mappings': '<Plug>(gista-', 'unite_sources': 'gista'}} "{{{
+    let g:gista#interactive_description = 1
+    " }}}
 endif "}}}
-
 
 " Session {{{
 let g:unite_source_menu_menus.sessions = {
@@ -698,7 +725,7 @@ exe 'nnoremap <silent>[menu]s :Unite -silent -winheight='.(len(g:unite_source_me
 " Buffers, tabs and windows operations {{{
 nnoremap <silent> <leader>ub :<C-u>Unite buffer<CR>
 let g:unite_source_menu_menus.navigation = {
-            \ 'description' : '     navigate by buffers, tabs & windows                   ⌘ [space]b', }
+            \ 'description' : '      navigate by buffers, tabs & windows                   ⌘ [space]b', }
 let g:unite_source_menu_menus.navigation.command_candidates = [
             \['buffers                                                    ⌘ ,b', 'Unite buffer'],
             \['tabs', 'Unite tab'],
@@ -719,7 +746,7 @@ nnoremap <leader>uo :<C-u>Unite -no-split -start-insert file<CR>
 nnoremap <leader>uO :<C-u>Unite -no-split -start-insert file_rec/async:!<CR>
 nnoremap <leader>um :<C-u>Unite -no-split file_mru<CR>
 let g:unite_source_menu_menus.files = {
-            \ 'description' : '          files & dirs                                          ⌘ [space]o',}
+            \ 'description' : '       files & dirs                                          ⌘ [space]o',}
 let g:unite_source_menu_menus.files.command_candidates = [
             \['open file                                                  ⌘ ,uo', 'normal ,uo'],
             \['open file with recursive search                            ⌘ ,uO', 'normal ,uO'],
@@ -734,13 +761,14 @@ let g:unite_source_menu_menus.files.command_candidates = [
             \['save as root                                               ⌘ :w!!', 'exe "write !sudo tee % >/dev/null"'],
             \['quick save                                                 ⌘ ,w', 'normal ,w'],
             \]
+
 exe 'nnoremap <silent>[menu]o :Unite -silent -winheight='.(len(g:unite_source_menu_menus.files.command_candidates) + 2).' menu:files<CR>'
 " }}}
 
 " Search files {{{
 nnoremap <silent><Leader>ua :Unite -silent -no-quit grep<CR>
 let g:unite_source_menu_menus.grep = {
-            \ 'description' : '           search files                                          ⌘ [space]a',
+            \ 'description' : '        search files                                          ⌘ [space]a',
             \}
 let g:unite_source_menu_menus.grep.command_candidates = [
             \['grep (ag → ack → grep)                                     ⌘ ,ua', 'Unite -no-quit grep'],
@@ -754,7 +782,7 @@ exe 'nnoremap <silent>[menu]a :Unite -silent -winheight='.(len(g:unite_source_me
 nnoremap <silent><Leader>ui :Unite -silent history/yank<CR>
 nnoremap <silent><Leader>ur :Unite -silent register<CR>
 let g:unite_source_menu_menus.registers = {
-            \ 'description' : '      yanks, registers & history                            ⌘ [space]i'}
+            \ 'description' : '       yanks, registers & history                            ⌘ [space]i'}
 let g:unite_source_menu_menus.registers.command_candidates = [
             \['yanks                                                      ⌘ ,ui', 'Unite history/yank'],
             \['commands       (history)                                   ⌘ q:', 'Unite history/command'],
@@ -768,7 +796,7 @@ exe 'nnoremap <silent>[menu]i :Unite -silent -winheight='.(len(g:unite_source_me
 
 " Vim {{{
 let g:unite_source_menu_menus.vim = {
-            \ 'description' : '            vim                                                   ⌘ [space]v'}
+            \ 'description' : '        vim                                                   ⌘ [space]v'}
 let g:unite_source_menu_menus.vim.command_candidates = [
             \['choose colorscheme', 'Unite colorscheme -auto-preview'],
             \['mappings', 'Unite mapping -start-insert'],
@@ -788,7 +816,7 @@ exe 'nnoremap <silent>[menu]v :Unite -silent -winheight='.(len(g:unite_source_me
 
 " Text edition {{{
 let g:unite_source_menu_menus.text = {
-            \ 'description' : '           text edition                                          ⌘ [space]e'}
+            \ 'description' : '         text edition                                          ⌘ [space]e'}
 let g:unite_source_menu_menus.text.command_candidates = [
             \['toggle search results highlight                            ⌘ ,[space]', 'set invhlsearch'],
             \['toggle line numbers                                        ⌘ ,on', 'call ToggleRelativeAbsoluteNumber()'],
@@ -824,7 +852,7 @@ exe 'nnoremap <silent>[menu]n :Unite -silent -winheight='.(len(g:unite_source_me
 
 " Git {{{
 let g:unite_source_menu_menus.git = {
-            \ 'description' : '            admin git repositories                                ⌘ [space]g'}
+            \ 'description' : '       admin git repositories                                ⌘ [space]g'}
 let g:unite_source_menu_menus.git.command_candidates = [
             \['git viewer             (gitv)                              ⌘ ,gL', 'normal ,gL'],
             \['git viewer - buffer    (gitv)                              ⌘ ,gl', 'normal ,gl'],
@@ -920,7 +948,7 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     let g:startify_session_autoload=1
     let g:startify_change_to_vcs_root=1
     let g:startify_session_persistence=1
-    nnoremap <leader>8 :Startify<cr>
+    nnoremap <leader>7 :Startify<cr>
     "}}}
     NeoBundle 'scrooloose/syntastic' "{{{
     let g:syntastic_error_symbol='✗'
@@ -928,12 +956,12 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     let g:syntastic_warning_symbol='∆'
     "}}}
     NeoBundle 'vim-scripts/vim-auto-save' "{{{
-    let g:auto_save=1 " enable AutoSave on Vim startup
+    let g:auto_save=0 " enable AutoSave on Vim startup 1
     let g:auto_save_in_insert_mode=0 " do not save while in insert mode
     "let g:auto_save_no_updatetime=1 " do not change the 'updatetime' option
     "let g:auto_save_silent = 1 " do not display the auto-save notification
     let g:syntastic_style_warning_symbol = '≈'
-    noremap <leader>4  :AutoSaveToggle<cr>
+    noremap <leader>1  :AutoSaveToggle<cr>
     "}}}
     NeoBundle 'phongvcao/vim-stardict' "{{{
     let g:stardict_split_horizontal=1
@@ -1025,6 +1053,42 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     "}}}
     NeoBundle 'tyru/restart.vim' "{{{
     " Only gui - Gvim
+    "}}}
+    NeoBundle 'fmoralesc/vim-pad' "{{{
+    let g:pad#dir="~/Documents/notes/"
+    let g:pad#window_height=30
+    let g:pad#open_in_split=1
+    let g:pad#position=["list"]
+    let g:pad#window_width=50
+    nmap <localleader>ll <Plug>(pad-list)
+    "}}}
+    NeoBundle 'mtth/scratch.vim' "{{{
+    let g:scratch_insert_autohide=1
+    nmap <F2> :Scratch<CR>
+    nmap <F3> :ScratchPreview<CR>
+    "}}}
+    NeoBundle 'luochen1990/rainbow' "{{{
+    let g:rainbow_active = 0 "0 if you want to enable it later via :RainbowToggle
+    nnoremap <leader>2 :RainbowToggle<CR>
+    let g:rainbow_conf = {
+                \   'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
+                \   'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
+                \   'operators': '_,_',
+                \   'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
+                \   'separately': {
+                \       '*': {},
+                \       'tex': {
+                \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/'],
+                \       },
+                \       'vim': {
+                \           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody'],
+                \       },
+                \       'html': {
+                \           'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold'],
+                \       },
+                \       'css': 0,
+                \   }
+                \}
     "}}}
 endif "}}}
 
