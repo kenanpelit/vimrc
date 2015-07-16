@@ -4,7 +4,7 @@
 "                        \ V /| | | | | | | | | (__
 " kenp                  (_)_/ |_|_| |_| |_|_|  \___|
 "*****************************************************************************
-"" NeoBundle core
+" NeoBundle core
 "*****************************************************************************
 " Note: Skip initialization for vim-tiny or vim-small.
 if !1 | finish | endif
@@ -31,7 +31,6 @@ let s:cache_dir=get(g:dotvim_settings, 'cache_dir', '~/.vim/.cache')
 let s:settings={}
 let s:settings.default_indent=4
 let s:settings.max_column=80
-let s:settings.autocomplete_method='ycm'
 let s:settings.enable_cursorcolumn=1
 let s:settings.autocomplete_method='ycm'
 
