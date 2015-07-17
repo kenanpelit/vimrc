@@ -61,7 +61,7 @@ else
 
     " exclude all language-specific plugins by default
     if !exists('g:dotvim_settings.plugin_groups_exclude')
-        let g:dotvim_settings.plugin_groups_exclude = ['web']
+        let g:dotvim_settings.plugin_groups_exclude = ['']
     endif
 
     for group in g:dotvim_settings.plugin_groups_exclude
@@ -72,13 +72,13 @@ else
     endfor
 
     if exists('g:dotvim_settings.plugin_groups_include')
-        for group in g:dotvim_settings.plugin_groups_include =['python', 'bash']
+        for group in g:dotvim_settings.plugin_groups_include =['python', 'web', 'bash']
             call add(s:settings.plugin_groups, group)
         endfor
     endif
 endif
 
-" override defaults with the ones specified in g:dotvim_settings
+" override defaults with the ones specified in g:dotvim_settings {{{
 for key in keys(s:settings)
     if has_key(g:dotvim_settings, key)
         let s:settings[key] = g:dotvim_settings[key]
@@ -95,7 +95,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 "}}}
 
 " functions {{{
-function! s:get_cache_dir(suffix) "{{{
+function! s:get_cache_dir(suffix)
     return resolve(expand(s:cache_dir . '/' . a:suffix))
 endfunction "}}}
 
@@ -131,25 +131,6 @@ function! ToggleWrap() "{{{
 endfunction
 " }}}
 
-" Toggle line numbers {{{
-nnoremap <silent><Leader>l :call ToggleRelativeAbsoluteNumber()<CR>
-function! ToggleRelativeAbsoluteNumber()
-    if !&number && !&relativenumber
-        set number
-        set norelativenumber
-    elseif &number && !&relativenumber
-        set nonumber
-        set relativenumber
-    elseif !&number && &relativenumber
-        set number
-        set relativenumber
-    elseif &number && &relativenumber
-        set nonumber
-        set norelativenumber
-    endif
-endfunction
-" }}}
-
 " Use Ranger as a file explorer {{{
 fun! RangerChooser()
     exec "silent !ranger --choosefile=/tmp/chosenfile " . expand("%:p:h")
@@ -159,7 +140,7 @@ fun! RangerChooser()
     endif
     redraw!
 endfun
-map <Leader>x :call RangerChooser()<CR>
+nmap <Leader>x :call RangerChooser()<CR>
 " }}}
 
 " Toggle the Quickfix window {{{
@@ -193,7 +174,7 @@ function! WordFrequency() range
     echo join(lst)
 endfunction
 command! -range=% WordFrequency <line1>,<line2>call WordFrequency()
-map <Leader>ef :Unite output:WordFrequency<CR>
+nmap <Leader>ef :Unite output:WordFrequency<CR>
 " }}}
 
 " Move between Vim and Tmux windows  {{{
@@ -229,11 +210,7 @@ function! LinesOfCode()
 endfunction
 "}}}
 
-" Text statistics {{{
-" get the total of lines, words, chars and bytes (and for the current position)
-map <Leader>es g<C-G>
-" }}}
-
+" formatting shortcuts {{{
 function! Preserve(command) "{{{
     " preparation: save last search, and cursor position.
     let _s=@/
@@ -245,14 +222,20 @@ function! Preserve(command) "{{{
     let @/=_s
     call cursor(l, c)
 endfunction "}}}
+nmap <leader>fef :call Preserve("normal gg=G")<cr>
+vmap <leader>feg :sort<cr>
+"}}}
 
+" vim file/folder management fonction {{{
 function! EnsureExists(path) "{{{
     if !isdirectory(expand(a:path))
         call mkdir(expand(a:path))
     endif
 endfunction "}}}
+"}}}
 
-function! CloseWindowOrKillBuffer() "{{{
+" window killer function {{{
+function! CloseWindowOrKillBuffer()
     let number_of_windows_to_this_buffer = len(filter(range(1, winnr('$')), "winbufnr(v:val) == bufnr('%')"))
     " never bdelete a nerd tree
     if matchstr(expand("%"), 'NERD') == 'NERD'
@@ -264,8 +247,29 @@ function! CloseWindowOrKillBuffer() "{{{
     else
         bdelete
     endif
-endfunction "}}}
+endfunction
+nnoremap <silent> Q :call CloseWindowOrKillBuffer()<cr>
+nnoremap <Leader>dd :call CloseWindowOrKillBuffer()<cr>
 "}}}
+
+" Toggle line numbers {{{
+function! ToggleRelativeAbsoluteNumber()
+    if !&number && !&relativenumber
+        set number
+        set norelativenumber
+    elseif &number && !&relativenumber
+        set nonumber
+        set relativenumber
+    elseif !&number && &relativenumber
+        set number
+        set relativenumber
+    elseif &number && &relativenumber
+        set nonumber
+        set norelativenumber
+    endif
+endfunction
+nmap <silent><Leader>3 :call ToggleRelativeAbsoluteNumber()<CR>
+" }}}
 
 " base configuration {{{
 set timeoutlen=300                                  "mapping timeout
@@ -332,7 +336,8 @@ set ignorecase                                      "ignore case for searching
 set smartcase                                       "do case-sensitive if there's a capital letter
 
 " dict
-set dictionary+=/home/kenan/.vim/dict/tr-words
+set dictionary+=n$HOME/.vim/dict/tr-words
+set viminfo+=n$HOME/.vim/.cache/viminfo
 
 if executable('ack')
     set grepprg=ack\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow\ $*
@@ -363,13 +368,16 @@ call EnsureExists(s:cache_dir)
 call EnsureExists(&undodir)
 call EnsureExists(&backupdir)
 call EnsureExists(&directory)
+"}}}
 
-" Map leader to
+" Map leader to {{{
 let mapleader = "\<Space>"
 let g:mapleader = "\<Space>"
 nnoremap <SPACE> <Nop>
 let maplocalleader = ","
+let g:maplocalleader = ","
 set timeoutlen=600
+"}}}
 
 " ui configuration {{{
 set showmatch                                       "automatically highlight matching braces/brackets/etc.
@@ -532,6 +540,12 @@ if count(s:settings.plugin_groups, 'scm') "{{{
     autocmd FileType gitcommit nmap <buffer> U :Git checkout -- <C-r><C-g><CR>
     autocmd BufReadPost fugitive://* set bufhidden=delete
     "}}}
+    NeoBundle 'airblade/vim-gitgutter' "{{{
+    "}}}
+    NeoBundle 'joedicastro/vim-github-dashboard' "{{{
+    "}}}
+    NeoBundleLazy 'gregsexton/gitv', {'depends':['tpope/vim-fugitive'], 'autoload':{'commands':'Gitv'}}
+    "}}}
     NeoBundleLazy 'gregsexton/gitv', {'depends':['tpope/vim-fugitive'], 'autoload':{'commands':'Gitv'}} "{{{
     nnoremap <silent> <localleader>gv :Gitv<CR>
     nnoremap <silent> <localleader>gV :Gitv!<CR>
@@ -662,6 +676,8 @@ if count(s:settings.plugin_groups, 'navigation') "{{{
     "let g:loaded_nerdtree_fugitive=1
     let g:NERDTreeMapNextHunk=",n"
     let g:NERDTreeMapPrevHunk=",p"
+    "}}}
+    NeoBundle 'Mizuchi/vim-ranger' "{{{
     "}}}
     NeoBundle 'rhysd/clever-f.vim' "{{{
     "}}}
@@ -808,11 +824,13 @@ if count(s:settings.plugin_groups, 'unite') "{{{
     endfunction
     autocmd FileType unite call s:unite_settings()
 
+    nnoremap <leader>nbu :Unite neobundle/update -vertical -no-start-insert<cr>
+
     nmap <space> [unite]
     nnoremap [unite] <nop>
 
     nmap <LocalLeader> [menu]
-    nnoremap <silent>[menu]u :Unite -silent -winheight=12 menu<CR>
+    nnoremap <silent>[menu]u :Unite -silent -winheight=12 menu<cr>
 
     nnoremap <silent> [unite]<space> :<C-u>Unite -toggle -auto-resize -buffer-name=mixed file_rec/async:! buffer file_mru bookmark<cr><c-u>
     nnoremap <silent> [unite]f :<C-u>Unite -toggle -auto-resize -buffer-name=files file_rec/async:!<cr><c-u>
@@ -834,7 +852,8 @@ if count(s:settings.plugin_groups, 'unite') "{{{
     "}}}
     NeoBundleLazy 'tsukkee/unite-tag', {'autoload':{'unite_sources':['tag','tag/file']}} "{{{
     nnoremap <silent> [unite]t :<C-u>Unite -auto-resize -buffer-name=tag tag tag/file<cr>
-    nnoremap <silent><Leader>ut :Unite -silent -vertical -winwidth=40 -direction=topleft -toggle outline<cr>
+
+    nnoremap <silent> [unite]ut :Unite -silent -vertical -winwidth=40 -direction=topleft -toggle outline<cr>
     "}}}
     NeoBundleLazy 'Shougo/unite-outline', {'autoload':{'unite_sources':'outline'}} "{{{
     nnoremap <silent> [unite]o :<C-u>Unite -auto-resize -buffer-name=outline outline<cr>
@@ -1509,6 +1528,8 @@ if count(s:settings.plugin_groups, 'misc') "{{{
         nnoremap <silent> {Right-Mapping} :TmuxNavigateRight<cr>
         nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
         let g:tmux_navigator_save_on_switch = 1
+        NeoBundle 'benmills/vimux'
+        NeoBundleLazy 'vimez/vim-tmux', { 'autoload' : { 'filetypes' : 'conf'}}
     endif
     NeoBundle 'kana/vim-vspec'
     NeoBundleLazy 'tpope/vim-scriptease', {'autoload':{'filetypes':['vim']}}
@@ -1641,6 +1662,16 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     NeoBundle 'tyru/restart.vim' "{{{
     " Only gui - Gvim
     "}}}
+    NeoBundle 'vim-scripts/utl.vim' "{{{
+    "}}}
+    NeoBundle 'myusuf3/numbers.vim' "{{{
+    let g:numbers_exclude = ['unite', 'tagbar', 'nerdtree', 'startify', 'undotree', 'vimshell']
+    "nnoremap <silent> <leader>3 :NumbersToggle<CR>
+    autocmd FocusLost * :set number
+    autocmd FocusGained * :set relativenumber
+    autocmd InsertEnter * :set number
+    autocmd InsertLeave * :set relativenumber
+    "}}}
     NeoBundle 'xolox/vim-reload', {'depends': 'xolox/vim-misc'} "{{{
     let g:reload_on_write = 1
     "}}}
@@ -1676,21 +1707,14 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     "}}}
 endif "}}}
 
-nnoremap <leader>nbu :Unite neobundle/update -vertical -no-start-insert<cr>
-
 " mappings {{{
-" formatting shortcuts {{{
-nmap <leader>fef :call Preserve("normal gg=G")<CR>
-vmap <leader>s :sort<cr>
-"}}}
-
 " eval vimscript by line or visual selection {{{
 nmap <silent> <leader>e :call Source(line('.'), line('.'))<CR>
 vmap <silent> <leader>e :call Source(line('v'), line('.'))<CR>
 "}}}
 
 " toggle paste {{{
-map <F6> :set invpaste<CR>:set paste?<CR>
+nmap <F6> :set invpaste<CR>:set paste?<CR>
 "}}}
 
 " remap arrow keys {{{
@@ -1706,7 +1730,7 @@ inoremap kj <esc>
 "}}}
 
 " insert a line break where the cursor is in Vim without entering into insert mode? {{{
-map <A-m> i<CR><Esc>
+nmap <A-m> i<CR><Esc>
 "}}}
 
 " Insert a newline without entering in insert mode {{{
@@ -1808,11 +1832,7 @@ nnoremap Y y$
 nnoremap <C-c> <C-c>:echo<cr>
 "}}}
 
-" window killer {{{
-nnoremap <silent> Q :call CloseWindowOrKillBuffer()<cr>
-nnoremap <Leader>dd :call CloseWindowOrKillBuffer()<cr>
 nnoremap <leader>w :w<cr>
-"}}
 
 " quick buffer open {{{
 nnoremap gb :ls<cr>:e #
@@ -1853,12 +1873,16 @@ map <F9> :!python % <enter>
 map <F10> :!sh % <enter>
 "}}}
 
+" Text statistics {{{
+" get the total of lines, words, chars and bytes (and for the current position)
+map <Leader>em g<C-G>
+" }}}
+
 " <leader>ev edits .vimrc
 nnoremap <leader>ev :vsplit ~/.vim/vimrc<CR>
-
 " <leader>sv sources .vimrc
 nnoremap <leader>sv :source $MYVIMRC<CR>:echo $MYVIMRC 'reloaded'<CR>
-""autocmd bufwritepost ~/.vim/vimrc source $MYVIMRC
+"autocmd! BufWritePost vimrc source %
 
 " autocmd {{{
 " go back to previous position of cursor if any
