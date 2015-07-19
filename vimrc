@@ -131,18 +131,6 @@ function! ToggleWrap() "{{{
 endfunction
 " }}}
 
-" Use Ranger as a file explorer {{{
-fun! RangerChooser()
-    exec "silent !ranger --choosefile=/tmp/chosenfile " . expand("%:p:h")
-    if filereadable('/tmp/chosenfile')
-        exec 'edit ' . system('cat /tmp/chosenfile')
-        call system('rm /tmp/chosenfile')
-    endif
-    redraw!
-endfun
-nmap <Leader>x :call RangerChooser()<CR>
-" }}}
-
 " Toggle the Quickfix window {{{
 function! s:QuickfixToggle()
     for i in range(1, winnr('$'))
@@ -156,7 +144,7 @@ function! s:QuickfixToggle()
     copen
 endfunction
 command! ToggleQuickfix call <SID>QuickfixToggle()
-nnoremap <silent> <Leader>q :ToggleQuickfix<CR>
+nnoremap <silent> <leader>q :ToggleQuickfix<CR>
 " }}}
 
 " get the word frequency in the text {{{
@@ -174,7 +162,7 @@ function! WordFrequency() range
     echo join(lst)
 endfunction
 command! -range=% WordFrequency <line1>,<line2>call WordFrequency()
-nmap <Leader>ef :Unite output:WordFrequency<CR>
+nmap <leader>ef :Unite output:WordFrequency<CR>
 " }}}
 
 " Move between Vim and Tmux windows  {{{
@@ -249,27 +237,8 @@ function! CloseWindowOrKillBuffer()
     endif
 endfunction
 nnoremap <silent> Q :call CloseWindowOrKillBuffer()<cr>
-nnoremap <Leader>dd :call CloseWindowOrKillBuffer()<cr>
+nnoremap <leader>dd :call CloseWindowOrKillBuffer()<cr>
 "}}}
-
-" Toggle line numbers {{{
-function! ToggleRelativeAbsoluteNumber()
-    if !&number && !&relativenumber
-        set number
-        set norelativenumber
-    elseif &number && !&relativenumber
-        set nonumber
-        set relativenumber
-    elseif !&number && &relativenumber
-        set number
-        set relativenumber
-    elseif &number && &relativenumber
-        set nonumber
-        set norelativenumber
-    endif
-endfunction
-nmap <silent><Leader>3 :call ToggleRelativeAbsoluteNumber()<CR>
-" }}}
 
 " base configuration {{{
 set timeoutlen=300                                  "mapping timeout
@@ -383,8 +352,8 @@ set timeoutlen=600
 set showmatch                                       "automatically highlight matching braces/brackets/etc.
 set matchtime=2                                     "tens of a second to show matching parentheses
 set number
-set relativenumber
 set lazyredraw
+set norelativenumber
 set laststatus=2
 set noshowmode
 set foldenable                                      "enable folds by default
@@ -393,12 +362,19 @@ set foldlevelstart=99                               "open all folds by default
 let g:xml_syntax_folding=1                          "enable xml folding
 
 set cursorline
+set guicursor=n-v-c:block-Cursor
+set guicursor+=i:ver100-iCursor
+set guicursor+=n-v-c:blinkon0
+set guicursor+=i:blinkwait10
+"set guicursor+=a:blinkon0
 autocmd WinLeave * setlocal nocursorline
 autocmd WinEnter * setlocal cursorline
+autocmd InsertEnter * set cursorline cursorcolumn
+autocmd InsertLeave * set nocursorline nocursorcolumn
 let &colorcolumn=s:settings.max_column
 
 if exists('+colorcolumn')
-    let &colorcolumn="80,".join(range(400,999),",")
+    let &colorcolumn="s:settings.max_column,".join(range(400,999),",")
 endif
 
 if s:settings.enable_cursorcolumn
@@ -514,29 +490,29 @@ if count(s:settings.plugin_groups, 'scm') "{{{
         NeoBundle 'bitbucket:ludovicchabant/vim-lawrencium'
     endif
     NeoBundle 'tpope/vim-fugitive' "{{{
-    nnoremap <localLeader>gn :Unite output:echo\ system("git\ init")<CR>
-    nnoremap <localLeader>gs :Gstatus<CR>
-    nnoremap <localLeader>gw :Gwrite<CR>
-    nnoremap <localLeader>go :Gread<CR>
-    nnoremap <localLeader>gR :Gremove<CR>
-    nnoremap <localLeader>gm :Gmove<Space>
-    nnoremap <localLeader>gc :Gcommit<CR>
-    nnoremap <localLeader>gd :Gdiff<CR>
-    nnoremap <localLeader>gb :Gblame<CR>
-    nnoremap <localLeader>gB :Gbrowse<CR>
-    nnoremap <localLeader>gp :Git! push<CR>
-    nnoremap <localLeader>gP :Git! pull<CR>
-    nnoremap <localLeader>gi :Git!<Space>
-    nnoremap <localLeader>ge :Gedit<CR>
-    nnoremap <localLeader>gE :Gedit<Space>
-    nnoremap <localLeader>gl :exe "silent Glog <Bar> Unite -no-quit quickfix"<CR>:redraw!<CR>
-    nnoremap <localLeader>gL :exe "silent Glog -- <Bar> Unite -no-quit quickfix"<CR>:redraw!<CR>
-    nnoremap <localLeader>gt :!tig<CR>:redraw!<CR>
-    nnoremap <localLeader>gS :exe "silent !shipit"<CR>:redraw!<CR>
-    nnoremap <localLeader>gg :exe 'silent Ggrep -i '.input("Pattern: ")<Bar> Unite quickfix -no-quit<CR>
-    nnoremap <localLeader>ggm :exe 'silent Glog --grep='.input("Pattern: ").' <Bar> Unite -no-quit quickfix'<CR>
-    nnoremap <localLeader>ggt :exe 'silent Glog -S='.input("Pattern: ").' <Bar> Unite -no-quit quickfix'<CR>
-    nnoremap <localLeader>ggc :silent! Ggrep -i<Space>
+    nnoremap <localleader>gn :Unite output:echo\ system("git\ init")<CR>
+    nnoremap <localleader>gs :Gstatus<CR>
+    nnoremap <localleader>gw :Gwrite<CR>
+    nnoremap <localleader>go :Gread<CR>
+    nnoremap <localleader>gR :Gremove<CR>
+    nnoremap <localleader>gm :Gmove<Space>
+    nnoremap <localleader>gc :Gcommit<CR>
+    nnoremap <localleader>gd :Gdiff<CR>
+    nnoremap <localleader>gb :Gblame<CR>
+    nnoremap <localleader>gB :Gbrowse<CR>
+    nnoremap <localleader>gp :Git! push<CR>
+    nnoremap <localleader>gP :Git! pull<CR>
+    nnoremap <localleader>gi :Git!<Space>
+    nnoremap <localleader>ge :Gedit<CR>
+    nnoremap <localleader>gE :Gedit<Space>
+    nnoremap <localleader>gl :exe "silent Glog <Bar> Unite -no-quit quickfix"<CR>:redraw!<CR>
+    nnoremap <localleader>gL :exe "silent Glog -- <Bar> Unite -no-quit quickfix"<CR>:redraw!<CR>
+    nnoremap <localleader>gt :!tig<CR>:redraw!<CR>
+    nnoremap <localleader>gS :exe "silent !shipit"<CR>:redraw!<CR>
+    nnoremap <localleader>gg :exe 'silent Ggrep -i '.input("Pattern: ")<Bar> Unite quickfix -no-quit<CR>
+    nnoremap <localleader>ggm :exe 'silent Glog --grep='.input("Pattern: ").' <Bar> Unite -no-quit quickfix'<CR>
+    nnoremap <localleader>ggt :exe 'silent Glog -S='.input("Pattern: ").' <Bar> Unite -no-quit quickfix'<CR>
+    nnoremap <localleader>ggc :silent! Ggrep -i<Space>
     autocmd FileType gitcommit nmap <buffer> U :Git checkout -- <C-r><C-g><CR>
     autocmd BufReadPost fugitive://* set bufhidden=delete
     "}}}
@@ -595,18 +571,18 @@ if count(s:settings.plugin_groups, 'editing') "{{{
     NeoBundle 'terryma/vim-expand-region'
     NeoBundle 'chrisbra/NrrwRgn'
     NeoBundleLazy 'godlygeek/tabular', {'autoload':{'commands':'Tabularize'}} "{{{
-    nmap <Leader>a& :Tabularize /&<CR>
-    vmap <Leader>a& :Tabularize /&<CR>
-    nmap <Leader>a= :Tabularize /=<CR>
-    vmap <Leader>a= :Tabularize /=<CR>
-    nmap <Leader>a: :Tabularize /:<CR>
-    vmap <Leader>a: :Tabularize /:<CR>
-    nmap <Leader>a:: :Tabularize /:\zs<CR>
-    vmap <Leader>a:: :Tabularize /:\zs<CR>
-    nmap <Leader>a, :Tabularize /,<CR>
-    vmap <Leader>a, :Tabularize /,<CR>
-    nmap <Leader>a<Bar> :Tabularize /<Bar><CR>
-    vmap <Leader>a<Bar> :Tabularize /<Bar><CR>
+    nmap <leader>a& :Tabularize /&<CR>
+    vmap <leader>a& :Tabularize /&<CR>
+    nmap <leader>a= :Tabularize /=<CR>
+    vmap <leader>a= :Tabularize /=<CR>
+    nmap <leader>a: :Tabularize /:<CR>
+    vmap <leader>a: :Tabularize /:<CR>
+    nmap <leader>a:: :Tabularize /:\zs<CR>
+    vmap <leader>a:: :Tabularize /:\zs<CR>
+    nmap <leader>a, :Tabularize /,<CR>
+    vmap <leader>a, :Tabularize /,<CR>
+    nmap <leader>a<Bar> :Tabularize /<Bar><CR>
+    vmap <leader>a<Bar> :Tabularize /<Bar><CR>
     "}}}
     NeoBundle 'jiangmiao/auto-pairs'
     NeoBundle 'justinmk/vim-sneak' "{{{
@@ -677,8 +653,6 @@ if count(s:settings.plugin_groups, 'navigation') "{{{
     let g:NERDTreeMapNextHunk=",n"
     let g:NERDTreeMapPrevHunk=",p"
     "}}}
-    NeoBundle 'Mizuchi/vim-ranger' "{{{
-    "}}}
     NeoBundle 'rhysd/clever-f.vim' "{{{
     "}}}
     NeoBundle 'MattesGroeger/vim-bookmarks' "{{{
@@ -724,8 +698,8 @@ if count(s:settings.plugin_groups, 'navigation') "{{{
     let g:EasyMotion_smartcase = 1
     nmap s <Plug>(easymotion-s)
     nmap s <Plug>(easymotion-s2)
-    map <Leader>j <Plug>(easymotion-j)
-    map <Leader>k <Plug>(easymotion-k)
+    map <leader>j <Plug>(easymotion-j)
+    map <leader>k <Plug>(easymotion-k)
     "}}}
 endif "}}}
 
@@ -764,7 +738,7 @@ if count(s:settings.plugin_groups, 'ctrlp') "{{{
         let g:ctrlp_user_command="ag %s -l --nocolor -g '"+ g:ctrlp_custom_ignore +"'"
     endif
     "}}}
-    nmap <LocalLeader> [ctrlp]
+    nmap <localleader> [ctrlp]
     nnoremap [ctrlp] <nop>
     nnoremap [ctrlp]t :CtrlPBufTag<cr>
     nnoremap [ctrlp]l :CtrlPLine<cr>
@@ -793,6 +767,7 @@ if count(s:settings.plugin_groups, 'unite') "{{{
     let g:unite_enable_start_insert=0
     let g:unite_source_history_yank_enable=1
     let g:unite_source_rec_max_cache_files=1000
+    let g:unite_source_file_mru_limit = 200
     let g:unite_source_grep_default_opts="-iRHn"
     let g:unite_source_menu_menus = {}
     let g:unite_enable_short_source_mes = 0
@@ -806,8 +781,8 @@ if count(s:settings.plugin_groups, 'unite') "{{{
 
     if executable('ag')
         let g:unite_source_grep_command='ag'
-        "let g:unite_source_grep_default_opts='--nocolor --line-numbers --nogroup -S -C4'
-        let g:unite_source_grep_default_opts="ag %s -l --line-numbers --nocolor -g '"+ g:ctrlp_custom_ignore +"'"
+        "let g:unite_source_grep_default_opts="%s -l --nogroup --nocolor --column --line-numbers --nocolor -g '"+ g:ctrlp_custom_ignore +"'"
+        let g:unite_source_grep_default_opts='-l --nogroup --nocolor --column --line-numbers --nocolor -g'
         let g:unite_source_grep_recursive_opt=''
         let g:unite_source_grep_search_word_highlight = 1
     elseif executable('ack')
@@ -829,7 +804,7 @@ if count(s:settings.plugin_groups, 'unite') "{{{
     nmap <space> [unite]
     nnoremap [unite] <nop>
 
-    nmap <LocalLeader> [menu]
+    nmap <localleader> [menu]
     nnoremap <silent>[menu]u :Unite -silent -winheight=12 menu<cr>
 
     nnoremap <silent> [unite]<space> :<C-u>Unite -toggle -auto-resize -buffer-name=mixed file_rec/async:! buffer file_mru bookmark<cr><c-u>
@@ -1085,7 +1060,7 @@ let g:unite_source_menu_menus.text.command_candidates = [
             \['▷ show available digraphs',
             \'digraphs'],
             \['▷ insert lorem ipsum text',
-            \'exe "Loremipsum" input("numero de palabras: ")'],
+            \'exe "Loremipsum" input("number of words: ")'],
             \['▷ show current char info                                     ⌘ ga',
             \'normal ga'],
             \]
@@ -1649,7 +1624,7 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     "}}}
     NeoBundle 'thinca/vim-quickrun' "{{{
     " Vim plugin to execute whole/part of editing file and show the result.
-    " <Leader>r
+    " <leader>r
     "}}}
     NeoBundle 'idbrii/vim-mark' "{{{
     let g:mark_no_mappings=1
@@ -1667,10 +1642,10 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     NeoBundle 'myusuf3/numbers.vim' "{{{
     let g:numbers_exclude = ['unite', 'tagbar', 'nerdtree', 'startify', 'undotree', 'vimshell']
     "nnoremap <silent> <leader>3 :NumbersToggle<CR>
-    autocmd FocusLost * :set number
-    autocmd FocusGained * :set relativenumber
-    autocmd InsertEnter * :set number
-    autocmd InsertLeave * :set relativenumber
+    "autocmd FocusLost * :set number
+    "autocmd FocusGained * :set relativenumber
+    "autocmd InsertEnter * :set number
+    "autocmd InsertLeave * :set relativenumber
     "}}}
     NeoBundle 'xolox/vim-reload', {'depends': 'xolox/vim-misc'} "{{{
     let g:reload_on_write = 1
@@ -1736,8 +1711,8 @@ nmap <A-m> i<CR><Esc>
 " Insert a newline without entering in insert mode {{{
 nmap oo o<Esc>k
 nmap OO O<Esc>j
-nnoremap <Leader>o o<Esc>
-nnoremap <Leader>O O<Esc>
+nnoremap <leader>o o<Esc>
+nnoremap <leader>O O<Esc>
 "}}}
 
 " Tab tab {{{
@@ -1868,6 +1843,25 @@ command! -bang QA qa<bang>
 command! -bang Qa qa<bang>
 "}}}
 
+" Toggle line numbers {{{
+function! ToggleRelativeAbsoluteNumber()
+    if !&number && !&relativenumber
+        set number
+        set norelativenumber
+    elseif &number && !&relativenumber
+        set nonumber
+        set relativenumber
+    elseif !&number && &relativenumber
+        set number
+        set relativenumber
+    elseif &number && &relativenumber
+        set nonumber
+        set norelativenumber
+    endif
+endfunction
+nnoremap <silent> <leader>3 :call ToggleRelativeAbsoluteNumber()<CR>
+" }}}
+
 " F<> commands {{{
 map <F9> :!python % <enter>
 map <F10> :!sh % <enter>
@@ -1875,7 +1869,7 @@ map <F10> :!sh % <enter>
 
 " Text statistics {{{
 " get the total of lines, words, chars and bytes (and for the current position)
-map <Leader>em g<C-G>
+map <leader>em g<C-G>
 " }}}
 
 " <leader>ev edits .vimrc
