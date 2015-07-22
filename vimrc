@@ -210,9 +210,12 @@ function! Preserve(command) "{{{
     let @/=_s
     call cursor(l, c)
 endfunction "}}}
-nmap <leader>fef :call Preserve("normal gg=G")<cr>
+nmap <leader>zf :call Preserve("normal gg=G")<cr>
 vmap <leader>feg :sort<cr>
+autocmd BufWritePre *.sh :normal gg=G
+autocmd BufWritePre *.py :normal gg=G
 "}}}
+
 
 " vim file/folder management fonction {{{
 function! EnsureExists(path) "{{{
@@ -351,9 +354,9 @@ set timeoutlen=600
 " ui configuration {{{
 set showmatch                                       "automatically highlight matching braces/brackets/etc.
 set matchtime=2                                     "tens of a second to show matching parentheses
-set number
+"set number
 set lazyredraw
-set norelativenumber
+"set norelativenumber
 set laststatus=2
 set noshowmode
 set foldenable                                      "enable folds by default
@@ -571,18 +574,20 @@ if count(s:settings.plugin_groups, 'editing') "{{{
     NeoBundle 'terryma/vim-expand-region'
     NeoBundle 'chrisbra/NrrwRgn'
     NeoBundleLazy 'godlygeek/tabular', {'autoload':{'commands':'Tabularize'}} "{{{
-    nmap <leader>a& :Tabularize /&<CR>
-    vmap <leader>a& :Tabularize /&<CR>
-    nmap <leader>a= :Tabularize /=<CR>
-    vmap <leader>a= :Tabularize /=<CR>
-    nmap <leader>a: :Tabularize /:<CR>
-    vmap <leader>a: :Tabularize /:<CR>
-    nmap <leader>a:: :Tabularize /:\zs<CR>
-    vmap <leader>a:: :Tabularize /:\zs<CR>
-    nmap <leader>a, :Tabularize /,<CR>
-    vmap <leader>a, :Tabularize /,<CR>
-    nmap <leader>a<Bar> :Tabularize /<Bar><CR>
-    vmap <leader>a<Bar> :Tabularize /<Bar><CR>
+    nmap <localleader>& :Tabularize /&<CR>
+    vmap <localleader>& :Tabularize /&<CR>
+    nmap <localleader>= :Tabularize /=<CR>
+    vmap <localleader>= :Tabularize /=<CR>
+    nmap <localleader>: :Tabularize /:<CR>
+    vmap <localleader>: :Tabularize /:<CR>
+    nmap <localleader>:: :Tabularize /:\zs<CR>
+    vmap <localleader>:: :Tabularize /:\zs<CR>
+    nmap <localleader>, :Tabularize /,<CR>
+    vmap <localleader>, :Tabularize /,<CR>
+    nmap <localleader>,, :Tabularize /,\zs<CR>
+    vmap <localleader>,, :Tabularize /,\zs<CR>
+    nmap <localleader><Bar> :Tabularize /<Bar><CR>
+    vmap <localleader><Bar> :Tabularize /<Bar><CR>
     "}}}
     NeoBundle 'jiangmiao/auto-pairs'
     NeoBundle 'justinmk/vim-sneak' "{{{
@@ -781,7 +786,6 @@ if count(s:settings.plugin_groups, 'unite') "{{{
 
     if executable('ag')
         let g:unite_source_grep_command='ag'
-        "let g:unite_source_grep_default_opts="%s -l --nogroup --nocolor --column --line-numbers --nocolor -g '"+ g:ctrlp_custom_ignore +"'"
         let g:unite_source_grep_default_opts='-l --nogroup --nocolor --column --line-numbers --nocolor -g'
         let g:unite_source_grep_recursive_opt=''
         let g:unite_source_grep_search_word_highlight = 1
@@ -848,6 +852,10 @@ if count(s:settings.plugin_groups, 'unite') "{{{
     "}}}
     NeoBundleLazy 'ujihisa/unite-colorscheme', {'autoload':{'unite_sources': 'colorscheme'}} "{{{
     "}}}
+    NeoBundleLazy 'osyo-manga/unite-filetype', {'autoload':{'unite_sources': 'filetype'}} "{{{
+    "}}}
+    NeoBundleLazy 'ujihisa/unite-locate', {'autoload':{'unite_sources':'locate'}} "{{{
+    "}}}
     NeoBundleLazy 'klen/unite-radio.vim', {'autoload':{'unite_sources':'radio'}} "{{{
     "}}}
     NeoBundleLazy 'lambdalisue/vim-gista', {'depends': ['Shougo/unite.vim', 'tyru/open-browser.vim'],
@@ -903,16 +911,28 @@ let g:unite_source_menu_menus.grep = {
             \                             ⌘ [space]a',
             \}
 let g:unite_source_menu_menus.grep.command_candidates = [
-            \['▷ grep (ag → ack → grep)                                     ⌘ ,a',
-            \'Unite -no-quit grep'],
-            \['▷ find',
+            \['▷ search line                                                            ⌘ ',
+            \'Unite -auto-preview -start-insert line'],
+            \['▷ grep (ag → ack → grep)                                                 ⌘ ,a',
+            \'Unite -auto-preview -winheight=25 -no-quit grep'],
+            \['▷ grep current word                                                      ⌘ ,A',
+            \'UniteWithCursorWord -auto-preview -winheight=25 -no-quit grep'],
+            \['▷ search word under the cursor in current buffer                         ⌘ ',
+            \'UniteWithCursorWord -no-split -auto-preview line'],
+            \['▷ search outlines & tags (ctags)                                         ⌘ ,c',
+            \'Unite -vertical -winwidth=25 -start-insert -direction=topleft -toggle outline'],
+            \['▷ search marks                                                           ⌘ ,k',
+            \'Unite -auto-preview -winheight=25 mark'],
+            \['▷ find                                                                   ⌘ ',
             \'Unite find'],
             \['▷ locate',
             \'Unite -start-insert locate'],
             \['▷ vimgrep (very slow)',
             \'Unite vimgrep'],
+            \['▷ trigger easymotion               (easymotion)                          ⌘ ,,',
+            \''],
             \]
-nnoremap <silent>[menu]a :Unite -silent menu:grep<CR>
+nnoremap <silent>[menu]a :Unite -silent -winheight=12 -start-insert menu:grep<CR>
 " }}}
 
 " buffers, tabs & windows menu {{{
@@ -993,8 +1013,8 @@ let g:unite_source_menu_menus.registers.command_candidates = [
             \'Unite register'],
             \['▷ messages',
             \'Unite output:messages'],
-            \['▷ undo tree      (gundo)                                     ⌘ ,u',
-            \'GundoToggle'],
+            \['▷ undo tree      (Undotree)                                  ⌘ ,u',
+            \'UndotreeToggle'],
             \]
 nnoremap <silent>[menu]i :Unite -silent menu:registers<CR>
 " }}}
@@ -1005,8 +1025,6 @@ let g:unite_source_menu_menus.spelling = {
             \                            ⌘ [space]s',
             \}
 let g:unite_source_menu_menus.spelling.command_candidates = [
-            \['▷ spell checking in Spanish                                  ⌘ ,ss',
-            \'setlocal spell spelllang=es'],
             \['▷ spell checking in English                                  ⌘ ,se',
             \'setlocal spell spelllang=en'],
             \['▷ turn off spell checking                                    ⌘ ,so',
@@ -1063,6 +1081,20 @@ let g:unite_source_menu_menus.text.command_candidates = [
             \'exe "Loremipsum" input("number of words: ")'],
             \['▷ show current char info                                     ⌘ ga',
             \'normal ga'],
+            \['▷ multiple-cursors: next               (vim-multiple-cursors)            ⌘ <C-n>',
+            \'normal <C-n>'],
+            \['▷ multiple-cursors: prev               (vim-multiple-cursors)            ⌘ <C-p>',
+            \'normal <C-p>'],
+            \['▷ multiple-cursors: skip               (vim-multiple-cursors)            ⌘ <C-x>',
+            \'normal <C-x>'],
+            \['▷ toggle surround in visualmode        (surround)                        ⌘ S',
+            \'visual S'],
+            \['▷ add surroundings in visualmode       (surround)                        ⌘ ys',
+            \''],
+            \['▷ change surroundings in visualmode    (surround)                        ⌘ cs',
+            \''],
+            \['▷ delete surroundings in visualmode    (surround)                        ⌘ ds',
+            \''],
             \]
 nnoremap <silent>[menu]e :Unite -silent -winheight=20 menu:text <CR>
 " }}}
@@ -1411,62 +1443,27 @@ let g:unite_source_menu_menus.vim.command_candidates = [
 nnoremap <silent>[menu]v :Unite menu:vim -silent -start-insert<CR>
 " }}}
 
-" db menu {{{
-let g:unite_source_menu_menus.db = {
-            \ 'description' : '             database (SQL)
-            \                                        ⌘ [space]S',
+let g:unite_source_menu_menus.tabularize = {
+            \ 'description' : '     tabularize
+            \                       ⌘ <Space>a',
             \}
-let g:unite_source_menu_menus.db.command_candidates = [
-            \['▷ Execute SQL',
-            \'exe "DBExecSQL" " ".input("SQL?: ")'],
-            \['▷ Execute SQL (with limit of n rows)',
-            \'exe "DBExecSQL" " ".input("SQL?: ")'],
-            \['▷ SQL SELECT statement',
-            \'exe "Select" " ".input("SELECT ")'],
-            \['▷ SQL UPDATE statement',
-            \'exe "Update" " ".input("UPDATE")'],
-            \['▷ SQL INSERT statement',
-            \'exe "Insert" " ".input("INSERT")'],
-            \['▷ SQL DELETE statement',
-            \'exe "Delete" " ".input("DELETE")'],
-            \['▷ SQL CALL statement',
-            \'exe "Call" " ".input("CALL")'],
-            \['▷ SQL DROP statement',
-            \'exe "Drop" " ".input("DROP")'],
-            \['▷ SQL ALTER statement',
-            \'exe "Alter" " ".input("ALTER")'],
-            \['▷ SQL CREATE statement',
-            \'exe "Create" " ".input("CREATE")'],
-            \['▷ List all Tables                                            ⌘ ,Slt',
-            \'DBListTable'],
-            \['▷ List all Procedures                                        ⌘ ,Slp',
-            \'DBListProcedure'],
-            \['▷ List all Views                                             ⌘ ,Slv',
-            \'DBListView'],
-            \['▷ List all Variables                                         ⌘ ,Svr',
-            \'DBListVar'],
-            \['▷ DBext Get Options',
-            \'DBGetOption'],
-            \['▷ DBext Set Option',
-            \'exe "DBSetOption" " ".input("Option: ")'],
-            \['▷ DBext Set Var',
-            \'exe "DBSetVar" " ".input("Var: ")'],
-            \['▷ DBext Set Buffer Parameters',
-            \'DBPromptForBufferParameters'],
-            \['▷ List all Connections       (only DBI/ODBC)',
-            \'DBListConnections'],
-            \['▷ Commit                     (only DBI/ODBC)',
-            \'DBCommit'],
-            \['▷ Rollback                   (only DBI/ODBC)',
-            \'DBRollback'],
-            \['▷ Connect                    (only DBI/ODBC)',
-            \'DBConnect'],
-            \['▷ Disconnect                 (only DBI/ODBC)',
-            \'DBDisconnect'],
+let g:unite_source_menu_menus.tabularize.command_candidates = [
+            \['▷ Tabularize &                                               ⌘ <Space>&',
+            \'Tabularize /&'],
+            \['▷ Tabularize =                                               ⌘ <Space>=',
+            \'Tabularize /='],
+            \['▷ Tabularize :                                               ⌘ <Space>:',
+            \'Tabularize /:'],
+            \['▷ Tabularize ::                                              ⌘ <Space>::',
+            \'Tabularize /:\zs'],
+            \['▷ Tabularize ,                                               ⌘ <Space>,',
+            \'Tabularize /,'],
+            \['▷ Tabularize ,,                                              ⌘ <Space>,,',
+            \'Tabularize /,\zs'],
+            \['▷ Tabularize <Bar>                                           ⌘ <Space><Bar>',
+            \'Tabularize /<Bar>'],
             \]
-
-nnoremap <silent>[menu]S :Unite menu:db -silent -winheight=25 -start-insert<CR>
-
+nnoremap <silent>[menu]t :Unite menu:tabularize<CR>
 " }}}
 
 if count(s:settings.plugin_groups, 'indents') "{{{
@@ -1614,7 +1611,6 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     NeoBundle 'ntpeters/vim-better-whitespace' "{{{
     ""Vim Better Whitespace Plugin
     highlight ExtraWhitespace ctermbg=yellow
-    autocmd FileType <desired_filetypes> autocmd BufWritePre <buffer> StripWhitespace
     nnoremap <silent> <leader>0 :StripWhitespace<CR>
     "}}}
     NeoBundleLazy 'zhaocai/GoldenView.Vim', {'autoload':{'mappings':['<Plug>ToggleGoldenViewAutoResize']}} "{{{
@@ -1641,6 +1637,7 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     "}}}
     NeoBundle 'myusuf3/numbers.vim' "{{{
     let g:numbers_exclude = ['unite', 'tagbar', 'nerdtree', 'startify', 'undotree', 'vimshell']
+    let g:enable_numbers = 0
     "nnoremap <silent> <leader>3 :NumbersToggle<CR>
     "autocmd FocusLost * :set number
     "autocmd FocusGained * :set relativenumber
@@ -1652,13 +1649,18 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     "}}}
     NeoBundle 'fmoralesc/vim-pad' "{{{
     let g:pad#dir="~/Documents/notes/"
-    let g:pad#window_height=30
-    let g:pad#open_in_split=1
+    let g:pad#default_format = "vim-notes"
+    let g:pad#search_backend = "ag"
+    let g:pad#open_in_split=0
     let g:pad#position=["list"]
+    let g:pad#window_height=30
     let g:pad#window_width=50
     nmap <localleader>ll <Plug>(pad-list)
     "}}}
-    NeoBundle 'mtth/scratch.vim' "{{{
+    NeoBundle 'xolox/vim-notes' "{{{
+    let g:notes_suffix = '.txt'
+    "}}}
+    NeoBundle 'tth/scratch.vim' "{{{
     let g:scratch_insert_autohide=1
     nmap <F2> :Scratch<CR>
     nmap <F3> :ScratchPreview<CR>
@@ -1864,7 +1866,7 @@ nnoremap <silent> <leader>3 :call ToggleRelativeAbsoluteNumber()<CR>
 
 " F<> commands {{{
 map <F9> :!python % <enter>
-map <F10> :!sh % <enter>
+map <F10> :!./% <enter>
 "}}}
 
 " Text statistics {{{
@@ -1888,6 +1890,7 @@ autocmd BufReadPost *
 autocmd FileType css,scss setlocal foldmethod=marker foldmarker={,}
 autocmd FileType css,scss nnoremap <silent> <leader>S vi{:sort<CR>
 autocmd FileType python setlocal foldmethod=indent
+autocmd FileType sh setlocal foldmethod=indent
 autocmd FileType markdown setlocal nolist
 autocmd FileType vim setlocal fdm=indent keywordprg=:help
 "}}}
@@ -1896,8 +1899,11 @@ autocmd FileType vim setlocal fdm=indent keywordprg=:help
 NeoBundle 'junegunn/seoul256.vim' "{{{
 set background=dark
 let g:seoul256_background=234
-let s:settings.colorscheme = 'seoul256'
+let s:settings.colorscheme = 'seoul256' "}}}
 "}}}
+
+"Vim Scrolling Slowly - disabling parenthesis highlighting "{{{
+let loaded_matchparen = 1
 "}}}
 
 " finish loading {{{
