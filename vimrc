@@ -355,8 +355,8 @@ set timeoutlen=600
 set showmatch                                       "automatically highlight matching braces/brackets/etc.
 set matchtime=2                                     "tens of a second to show matching parentheses
 "set number
-set lazyredraw
 "set norelativenumber
+set lazyredraw
 set laststatus=2
 set noshowmode
 set foldenable                                      "enable folds by default
@@ -365,13 +365,6 @@ set foldlevelstart=99                               "open all folds by default
 let g:xml_syntax_folding=1                          "enable xml folding
 
 set cursorline
-set guicursor=n-v-c:block-Cursor
-set guicursor+=i:ver100-iCursor
-set guicursor+=n-v-c:blinkon0
-set guicursor+=i:blinkwait10
-"set guicursor+=a:blinkon0
-autocmd WinLeave * setlocal nocursorline
-autocmd WinEnter * setlocal cursorline
 autocmd InsertEnter * set cursorline cursorcolumn
 autocmd InsertLeave * set nocursorline nocursorcolumn
 let &colorcolumn=s:settings.max_column
@@ -623,12 +616,12 @@ if count(s:settings.plugin_groups, 'navigation') "{{{
     nnoremap <leader>vo :GrepOptions<cr>
     "}}}
     NeoBundleLazy 'scrooloose/nerdtree', {'autoload':{'commands':['NERDTreeToggle','NERDTreeFind']}} "{{{
-    let NERDTreeShowHidden=1
+    let NERDTreeShowHidden=0
     let NERDTreeQuitOnOpen=0
-    let NERDTreeShowLineNumbers=1
+    let NERDTreeShowLineNumbers=0
     let NERDTreeChDirMode=0
     let NERDTreeShowBookmarks=1
-    let NERDTreeHighlightCursorline=1
+    let NERDTreeHighlightCursorline=0
     let NERDTreeHijackNetrw=0
     let NERDTreeWinSize=40
     let NERDTreeIgnore=['\.git','\.hg']
@@ -820,7 +813,7 @@ if count(s:settings.plugin_groups, 'unite') "{{{
     nnoremap <silent> [unite]/ :<C-u>Unite -no-quit -buffer-name=search grep:.<cr>
     nnoremap <silent> [unite]m :<C-u>Unite -auto-resize -buffer-name=mappings mapping<cr>
     nnoremap <silent> [unite]s :<C-u>Unite -quick-match buffer<cr>
-    nnoremap <silent> [unite]ff :<C-u>UniteWithInputDirectory -toggle -auto-resize -buffer-name=files file_rec/async:!<cr><c-u>
+    nnoremap <silent> [unite]d :<C-u>UniteWithInputDirectory -toggle -auto-resize -buffer-name=files file_rec/async:!<cr><c-u>
     "}}}
     NeoBundleLazy 'Shougo/neomru.vim', {'autoload':{'unite_sources':'file_mru'}}
     NeoBundleLazy 'osyo-manga/unite-airline_themes', {'autoload':{'unite_sources':'airline_themes'}} "{{{
@@ -832,7 +825,7 @@ if count(s:settings.plugin_groups, 'unite') "{{{
     NeoBundleLazy 'tsukkee/unite-tag', {'autoload':{'unite_sources':['tag','tag/file']}} "{{{
     nnoremap <silent> [unite]t :<C-u>Unite -auto-resize -buffer-name=tag tag tag/file<cr>
 
-    nnoremap <silent> [unite]ut :Unite -silent -vertical -winwidth=40 -direction=topleft -toggle outline<cr>
+    nnoremap <silent> [unite]u :<C-u>Unite -silent -vertical -winwidth=40 -direction=topleft -toggle outline<cr>
     "}}}
     NeoBundleLazy 'Shougo/unite-outline', {'autoload':{'unite_sources':'outline'}} "{{{
     nnoremap <silent> [unite]o :<C-u>Unite -auto-resize -buffer-name=outline outline<cr>
@@ -1540,7 +1533,7 @@ if count(s:settings.plugin_groups, 'misc') "{{{
                 \ expand($VIMRUNTIME) . '/doc',
                 \ expand($VIMFILES) . 'bundle/.*/doc',
                 \ ]
-    let g:startify_files_number=15
+    let g:startify_files_number=20
     let g:startify_relative_path=1
     let g:startify_enable_special=0
     let g:startify_change_to_dir=0
@@ -1570,6 +1563,12 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     nnoremap <leader>h :StarDictCursor<CR>
     set keywordprg=~/.local/bin/trans\ :tr+en " https://github.com/soimort/translate-shell - Shift-k
     autocmd FileType vim nnoremap <buffer> K :r! '~/.local/bin/trans\ :tr+en ' . expand("<cword>")<cr>
+    "highlight link stardictResult Special
+    "highlight link stardictWord PreProc
+    "highlight link stardictWordType Statement
+    "highlight link stardictWordMeaning Identifier
+    "highlight link stardictWordExample Type
+    "highlight link stardictDictName Underlined
     "}}}
     NeoBundle 'szw/vim-ctrlspace' "{{{
     if isdirectory($HOME . '/.vim/.cache/ctrlspace') == 0
@@ -1644,6 +1643,11 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     "autocmd InsertEnter * :set number
     "autocmd InsertLeave * :set relativenumber
     "}}}
+    "NeoBundle 'dhruvasagar/vim-prosession', {'depends': 'tpope/vim-obsession'} "{{{
+    "let g:prosession_dir=s:get_cache_dir('sessions')
+    "let g:loaded_prosession=0
+    "let g:prosession_on_startup=0
+    "}}}
     NeoBundle 'xolox/vim-reload', {'depends': 'xolox/vim-misc'} "{{{
     let g:reload_on_write = 1
     "}}}
@@ -1659,6 +1663,11 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     "}}}
     NeoBundle 'xolox/vim-notes' "{{{
     let g:notes_suffix = '.txt'
+    "}}}
+    NeoBundle 'fmoralesc/vim-tutor-mode' "{{{
+    "}}}
+    NeoBundle 'fmoralesc/vim-autogit' "{{{
+    let b:autogit_enabled=1
     "}}}
     NeoBundle 'tth/scratch.vim' "{{{
     let g:scratch_insert_autohide=1
@@ -1715,11 +1724,6 @@ nmap oo o<Esc>k
 nmap OO O<Esc>j
 nnoremap <leader>o o<Esc>
 nnoremap <leader>O O<Esc>
-"}}}
-
-" Tab tab {{{
-nnoremap <tab> <c-w>
-nnoremap <tab><tab> <c-w><c-w>
 "}}}
 
 " change cursor position in insert mode {{{
@@ -1796,6 +1800,11 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 "}}}
 
+" Tab tab {{{
+nnoremap <tab> <c-w>
+nnoremap <tab><tab> <c-w><c-w>
+"}}}
+
 " tab shortcuts {{{
 map <leader>tn :tabnew<CR>
 map <leader>tc :tabclose<CR>
@@ -1819,9 +1828,11 @@ nnoremap gb :ls<cr>:e #
 noremap cp yap<S-}>p
 "}}}
 
+" Dispatch {{{
 if neobundle#is_sourced('vim-dispatch')
     nnoremap <leader>tag :Dispatch ctags -R<cr>
 endif
+"}}}
 
 " general {{{
 nmap <leader>l :set list! list?<cr>
@@ -1896,10 +1907,11 @@ autocmd FileType vim setlocal fdm=indent keywordprg=:help
 "}}}
 
 " color schemes {{{
-NeoBundle 'junegunn/seoul256.vim' "{{{
+NeoBundle 'kenanpelit/vim-tomorrow-theme' "{{{
 set background=dark
-let g:seoul256_background=234
-let s:settings.colorscheme = 'seoul256' "}}}
+let s:settings.colorscheme = 'Tomorrow-Night' "}}}
+"let s:settings.colorscheme = 'Tomorrow-Night-Bright' "}}}
+"let s:settings.colorscheme = 'Tomorrow-Night-Eighties' "}}}
 "}}}
 
 "Vim Scrolling Slowly - disabling parenthesis highlighting "{{{
