@@ -31,7 +31,7 @@ let s:cache_dir=get(g:dotvim_settings, 'cache_dir', '~/.vim/.cache')
 let s:settings={}
 let s:settings.default_indent=4
 let s:settings.max_column=80
-let s:settings.enable_cursorcolumn=1
+let s:settings.enable_cursorcolumn=0
 let s:settings.autocomplete_method='ycm'
 let s:settings.colorscheme='seoul256'
 
@@ -216,6 +216,18 @@ autocmd BufWritePre *.sh :normal gg=G
 autocmd BufWritePre *.py :normal gg=G
 "}}}
 
+"Toggle cursorline and cursorcolumn function in VIM {{{
+fu! ToggleCurline () "{{{
+    if &cursorline && &cursorcolumn
+        set nocursorline
+        set nocursorcolumn
+    else
+        set cursorline
+        set cursorcolumn
+    endif
+endfunction "}}}
+nmap <F7> :call ToggleCurline()<CR>
+"}}}
 
 " vim file/folder management fonction {{{
 function! EnsureExists(path) "{{{
@@ -240,7 +252,6 @@ function! CloseWindowOrKillBuffer()
     endif
 endfunction
 nnoremap <silent> Q :call CloseWindowOrKillBuffer()<cr>
-nnoremap <leader>dd :call CloseWindowOrKillBuffer()<cr>
 "}}}
 
 " base configuration {{{
@@ -364,11 +375,7 @@ set foldmethod=syntax                               "fold via syntax of files
 set foldlevelstart=99                               "open all folds by default
 let g:xml_syntax_folding=1                          "enable xml folding
 
-set cursorline
-autocmd InsertEnter * set cursorline cursorcolumn
-autocmd InsertLeave * set nocursorline nocursorcolumn
 let &colorcolumn=s:settings.max_column
-
 if exists('+colorcolumn')
     let &colorcolumn="s:settings.max_column,".join(range(400,999),",")
 endif
@@ -1563,12 +1570,6 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     nnoremap <leader>h :StarDictCursor<CR>
     set keywordprg=~/.local/bin/trans\ :tr+en " https://github.com/soimort/translate-shell - Shift-k
     autocmd FileType vim nnoremap <buffer> K :r! '~/.local/bin/trans\ :tr+en ' . expand("<cword>")<cr>
-    "highlight link stardictResult Special
-    "highlight link stardictWord PreProc
-    "highlight link stardictWordType Statement
-    "highlight link stardictWordMeaning Identifier
-    "highlight link stardictWordExample Type
-    "highlight link stardictDictName Underlined
     "}}}
     NeoBundle 'szw/vim-ctrlspace' "{{{
     if isdirectory($HOME . '/.vim/.cache/ctrlspace') == 0
@@ -1635,7 +1636,7 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     NeoBundle 'vim-scripts/utl.vim' "{{{
     "}}}
     NeoBundle 'myusuf3/numbers.vim' "{{{
-    let g:numbers_exclude = ['unite', 'tagbar', 'nerdtree', 'startify', 'undotree', 'vimshell']
+    let g:numbers_exclude = ['unite', 'tagbar', 'nerdtree', 'startify', 'undotree', 'vimshell', 'vim-stardict']
     let g:enable_numbers = 0
     "nnoremap <silent> <leader>3 :NumbersToggle<CR>
     "autocmd FocusLost * :set number
@@ -1828,11 +1829,9 @@ nnoremap gb :ls<cr>:e #
 noremap cp yap<S-}>p
 "}}}
 
-" Dispatch {{{
 if neobundle#is_sourced('vim-dispatch')
     nnoremap <leader>tag :Dispatch ctags -R<cr>
 endif
-"}}}
 
 " general {{{
 nmap <leader>l :set list! list?<cr>
@@ -1907,12 +1906,10 @@ autocmd FileType vim setlocal fdm=indent keywordprg=:help
 "}}}
 
 " color schemes {{{
-NeoBundle 'kenanpelit/vim-tomorrow-theme' "{{{
+NeoBundle 'kenanpelit/seoul256.vim' "{{{
 set background=dark
-let s:settings.colorscheme = 'Tomorrow-Night' "}}}
-"let s:settings.colorscheme = 'Tomorrow-Night-Bright' "}}}
-"let s:settings.colorscheme = 'Tomorrow-Night-Eighties' "}}}
-"}}}
+let g:seoul256_background=235
+let s:settings.colorscheme = 'seoul256' "}}}
 
 "Vim Scrolling Slowly - disabling parenthesis highlighting "{{{
 let loaded_matchparen = 1
