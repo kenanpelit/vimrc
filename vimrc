@@ -682,6 +682,7 @@ if count(s:settings.plugin_groups, 'navigation') "{{{
     map <leader>k <Plug>(easymotion-k)
     "}}}
     NeoBundle 'Shougo/vimfiler.vim' "{{{
+    let g:vimfiler_data_directory=s:get_cache_dir('vimfiler')
     let g:vimfiler_as_default_explorer=1
     let g:vimfiler_safe_mode_by_default=1
     let g:vimfiler_tree_leaf_icon=" "
@@ -690,13 +691,15 @@ if count(s:settings.plugin_groups, 'navigation') "{{{
     let g:vimfiler_file_icon='-'
     let g:vimfiler_marked_file_icon='✓'
     let g:vimfiler_readonly_file_icon='⭤'
+    let g:vimfiler_expand_jump_to_first_child=0
+    let g:vimfiler_enable_auto_cd=1
+    let g:vimfiler_ignore_pattern='\.'
+    "let g:vimfiler_ignore_pattern='^\%(\.git\|\.hg\)$'
     "let g:vimfiler_sort_type = "Time"
     "let g:vimfiler_time_format = '%m-%d-%y %H:%M:%S'
-    let g:vimfiler_expand_jump_to_first_child=0
-    let g:vimfiler_ignore_pattern='^\%(\.git\|\.hg\)$'
-    let g:vimfiler_data_directory=s:get_cache_dir('vimfiler')
     "autocmd VimEnter * VimFiler
     "autocmd VimEnter * if !argc() | VimFiler | endif
+    autocmd FileType vimfiler nmap q <buffer> <Plug>(vimfiler_close)
     autocmd FileType vimfiler nunmap <buffer> <C-l>
     autocmd FileType vimfiler nunmap <buffer> <C-j>
     autocmd FileType vimfiler nunmap <buffer> l
@@ -705,13 +708,29 @@ if count(s:settings.plugin_groups, 'navigation') "{{{
     autocmd FileType vimfiler nmap <buffer> <C-R> <Plug>(vimfiler_redraw_screen)
     autocmd FileType vimfiler nmap <buffer> <Leader>sd <Plug>(vimfiler_mark_current_line):call VimfilerSearch()<CR>
     autocmd FileType vimfiler nmap <silent><buffer><expr> <CR> vimfiler#smart_cursor_map("\<Plug>(vimfiler_expand_tree)", "\<Plug>(vimfiler_edit_file)")
-    nnoremap <Leader>9 :<C-u>VimFiler -buffer-name=explorer -split -parent -winwidth=55 -toggle -no-quit<CR>
-    nnoremap <Leader>8 :<C-u>VimFiler -buffer-name=explorer -split -parent -winwidth=55 -toggle -no-quit -find<CR>
+    nnoremap <Leader>9 :<C-u>VimFiler -winwidth=55 -buffer-name=kenp -split -parent -winwidth=55 -toggle -no-quit<CR>
+    nnoremap <Leader>8 :<C-u>VimFiler -winwidth=55 -buffer-name=kenp -split -parent -winwidth=55 -toggle -no-quit -find<CR>
     "}}}
     NeoBundle 'ryanoasis/vim-webdevicons' "{{{
     let g:webdevicons_enable = 1
     let g:webdevicons_enable_unite = 1
     let g:webdevicons_enable_vimfiler = 1
+    "}}}
+    NeoBundle 't9md/vim-choosewin' "{{{
+    nmap  -  <Plug>(choosewin)
+    let g:choosewin_overlay_enable = 1
+    let g:choosewin_overlay_clear_multibyte = 1
+    let g:choosewin_color_overlay = {
+          \ 'gui': ['DodgerBlue3', 'DodgerBlue3' ],
+          \ 'cterm': [ 25, 25 ]
+          \ }
+    let g:choosewin_color_overlay_current = {
+          \ 'gui': ['firebrick1', 'firebrick1' ],
+          \ 'cterm': [ 124, 124 ]
+          \ }
+    let g:choosewin_blink_on_land      = 1 " dont' blink at land
+    let g:choosewin_statusline_replace = 1 " don't replace statusline
+    let g:choosewin_tabline_replace    = 1 " don't replace tabline
     "}}}
 endif "}}}
 
@@ -1620,6 +1639,7 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     nnoremap <silent> <leader>0 :StripWhitespace<CR>
     "}}}
     NeoBundleLazy 'zhaocai/GoldenView.Vim', {'autoload':{'mappings':['<Plug>ToggleGoldenViewAutoResize']}} "{{{
+    let g:goldenview_enable_at_startup=0
     let g:goldenview__enable_default_mapping=0
     nmap <F4> <Plug>ToggleGoldenViewAutoResize
     nmap <silent> <C-g>  <Plug>GoldenViewSplit
@@ -1635,9 +1655,6 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     "}}}
     NeoBundle 'vim-scripts/LargeFile' "{{{
     " Edit large files quickly - g:LargeFile (by default, its 100)
-    "}}}
-    NeoBundle 'tyru/restart.vim' "{{{
-    " Only gui - Gvim
     "}}}
     NeoBundle 'vim-scripts/utl.vim' "{{{
     "}}}
@@ -1660,7 +1677,7 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     "}}}
     NeoBundle 'fmoralesc/vim-pad' "{{{
     let g:pad#dir="~/Documents/notes/"
-    let g:pad#default_format = "vim-notes"
+    "let g:pad#default_format = "vim-notes"
     let g:pad#search_backend = "ag"
     let g:pad#open_in_split=0
     let g:pad#position=["list"]
@@ -1706,6 +1723,11 @@ nmap <silent> <leader>e :call Source(line('.'), line('.'))<CR>
 vmap <silent> <leader>e :call Source(line('v'), line('.'))<CR>
 "}}}
 
+" F<> commands {{{
+map <F9> :!python % <enter>
+map <F10> :!./% <enter>
+"}}}
+
 " toggle paste {{{
 nmap <F6> :set invpaste<CR>:set paste?<CR>
 "}}}
@@ -1718,8 +1740,8 @@ nnoremap <down> :tabprev<CR>
 "}}}
 
 " smash escape {{{
-"inoremap jk <esc>
-"inoremap kj <esc>
+inoremap jk <esc>
+inoremap kj <esc>
 "}}}
 
 " insert a line break where the cursor is in Vim without entering into insert mode? {{{
@@ -1853,12 +1875,23 @@ nnoremap <silent> <leader>DP :exe ":profile pause"<cr>
 nnoremap <silent> <leader>DC :exe ":profile continue"<cr>
 nnoremap <silent> <leader>DQ :exe ":profile pause"<cr>:noautocmd qall!<cr>
 "}}}
-"}}}
 
 " commands {{{
 command! -bang Q q<bang>
 command! -bang QA qa<bang>
 command! -bang Qa qa<bang>
+"}}}
+
+" Text statistics {{{
+" get the total of lines, words, chars and bytes (and for the current position)
+map <leader>em g<C-G>
+" }}}
+
+" <leader>ev edits .vimrc
+nnoremap <leader>ev :vsplit ~/.vim/vimrc<CR>
+" <leader>sv sources .vimrc
+nnoremap <leader>sv :source $MYVIMRC<CR>:echo $MYVIMRC 'reloaded'<CR>
+"autocmd! BufWritePost vimrc source %
 "}}}
 
 " Toggle line numbers {{{
@@ -1879,22 +1912,6 @@ function! ToggleRelativeAbsoluteNumber()
 endfunction
 nnoremap <silent> <leader>3 :call ToggleRelativeAbsoluteNumber()<CR>
 " }}}
-
-" F<> commands {{{
-map <F9> :!python % <enter>
-map <F10> :!./% <enter>
-"}}}
-
-" Text statistics {{{
-" get the total of lines, words, chars and bytes (and for the current position)
-map <leader>em g<C-G>
-" }}}
-
-" <leader>ev edits .vimrc
-nnoremap <leader>ev :vsplit ~/.vim/vimrc<CR>
-" <leader>sv sources .vimrc
-nnoremap <leader>sv :source $MYVIMRC<CR>:echo $MYVIMRC 'reloaded'<CR>
-"autocmd! BufWritePost vimrc source %
 
 " autocmd {{{
 " go back to previous position of cursor if any
