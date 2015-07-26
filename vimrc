@@ -192,6 +192,30 @@ else
 endif
 " }}}
 
+" VimFler fonction {{{
+function! VimfilerCurrentDir()
+    let currentDir = vimfiler#get_current_vimfiler().original_files
+    for dirItem in currentDir
+        if dirItem.vimfiler__is_marked == 1
+            return dirItem.action__path
+        endif
+    endfor
+endfunction
+
+function! VimfilerSearch()
+    let dirToSearch = VimfilerCurrentDir()
+    let pattern = input("Search [".dirToSearch."] For: ")
+    if pattern == ''
+        echo 'Maybe another time...'
+        return
+    endif
+    exec 'silent grep! "'.pattern.'" '.dirToSearch
+    exec "redraw!"
+    exec "redrawstatus!"
+    exec "copen"
+endfunction
+"}}}
+
 " Count lines of code {{{
 function! LinesOfCode()
     echo system('cloc --quiet '.bufname("%"))
@@ -622,41 +646,12 @@ if count(s:settings.plugin_groups, 'navigation') "{{{
     let g:EasyGrepCommand=1
     nnoremap <leader>vo :GrepOptions<cr>
     "}}}
-    NeoBundleLazy 'scrooloose/nerdtree', {'autoload':{'commands':['NERDTreeToggle','NERDTreeFind']}} "{{{
-    let NERDTreeShowHidden=0
-    let NERDTreeQuitOnOpen=0
-    let NERDTreeShowLineNumbers=0
-    let NERDTreeChDirMode=0
-    let NERDTreeShowBookmarks=1
-    let NERDTreeHighlightCursorline=0
-    let NERDTreeHijackNetrw=0
-    let NERDTreeWinSize=40
-    let NERDTreeIgnore=['\.git','\.hg']
-    let NERDTreeBookmarksFile=s:get_cache_dir('NERDTreeBookmarks')
-    nnoremap <leader>9 :NERDTreeToggle<CR>
-    nnoremap <leader>8 :NERDTreeFind<CR>
-
-    "}}}
-    NeoBundle 'jistr/vim-nerdtree-tabs' "{{{
-    let g:nerdtree_tabs_open_on_gui_startup=0
-    let g:nerdtree_tabs_open_on_console_startup=0
-    let g:nerdtree_tabs_focus_on_files=1
-    let g:nerdtree_tabs_synchronize_view=1
-    let g:nerdtree_tabs_synchronize_focus=1
-    let g:nerdtree_tabs_smart_startup_focus=1
-    let g:nerdtree_tabs_autofind=1
-    "}}}
     NeoBundle 'scrooloose/nerdcommenter' "{{{
     filetype plugin on
     let NERDMenuMode=0
     let NERDSpaceDelims=1
     nmap <leader>6 :call NERDComment(0, "toggle")<cr>
     vmap <leader>6 :call NERDComment(0, "toggle")<cr>")"
-    "}}}
-    NeoBundle 'Xuyuanp/nerdtree-git-plugin', {'depends': 'tpope/vim-fugitive'} "{{{
-    "let g:loaded_nerdtree_fugitive=1
-    let g:NERDTreeMapNextHunk=",n"
-    let g:NERDTreeMapPrevHunk=",p"
     "}}}
     NeoBundle 'rhysd/clever-f.vim' "{{{
     "}}}
@@ -666,30 +661,10 @@ if count(s:settings.plugin_groups, 'navigation') "{{{
     let g:bookmark_save_per_working_dir=0
     let g:bookmark_manage_per_buffer=1
     let g:bookmark_auto_close=1
-    let g:bookmark_auto_save=1
+    let g:bookmark_auto_save=0
     let g:bookmark_auto_save_file=s:get_cache_dir('bookmark')
     let g:bookmark_center=1
-    let g:bookmark_no_default_key_mappings=1
-    function! BookmarkMapKeys()
-        nmap mm :BookmarkToggle<CR>
-        nmap mi :BookmarkAnnotate<CR>
-        nmap mn :BookmarkNext<CR>
-        nmap mp :BookmarkPrev<CR>
-        nmap ma :BookmarkShowAll<CR>
-        nmap mc :BookmarkClear<CR>
-        nmap mx :BookmarkClearAll<CR>
-    endfunction
-    function! BookmarkUnmapKeys()
-        unmap mm
-        unmap mi
-        unmap mn
-        unmap mp
-        unmap ma
-        unmap mc
-        unmap mx
-    endfunction
-    autocmd BufEnter * :call BookmarkMapKeys()
-    autocmd BufEnter NERD_tree_* :call BookmarkUnmapKeys()
+    let g:bookmark_no_default_key_mappings=0
     highlight BookmarkSign ctermbg=NONE ctermfg=1
     highlight BookmarkLine ctermbg=240 ctermfg=NONE
     highlight BookmarkAnnotationSign ctermbg=NONE ctermfg=190
@@ -698,13 +673,45 @@ if count(s:settings.plugin_groups, 'navigation') "{{{
     NeoBundleLazy 'majutsushi/tagbar', {'autoload':{'commands':'TagbarToggle'}} "{{{
     nnoremap <silent> <leader>4 :TagbarToggle<CR>
     "}}}
-    NeoBundle 'easymotion/vim-easymotion'
+    NeoBundle 'easymotion/vim-easymotion' "{{{
     let g:EasyMotion_do_mapping = 0
     let g:EasyMotion_smartcase = 1
     nmap s <Plug>(easymotion-s)
     nmap s <Plug>(easymotion-s2)
     map <leader>j <Plug>(easymotion-j)
     map <leader>k <Plug>(easymotion-k)
+    "}}}
+    NeoBundle 'Shougo/vimfiler.vim' "{{{
+    let g:vimfiler_as_default_explorer=1
+    let g:vimfiler_safe_mode_by_default=1
+    let g:vimfiler_tree_leaf_icon=" "
+    let g:vimfiler_tree_closed_icon='▸'
+    let g:vimfiler_tree_opened_icon='▾'
+    let g:vimfiler_file_icon='-'
+    let g:vimfiler_marked_file_icon='✓'
+    let g:vimfiler_readonly_file_icon='⭤'
+    "let g:vimfiler_sort_type = "Time"
+    "let g:vimfiler_time_format = '%m-%d-%y %H:%M:%S'
+    let g:vimfiler_expand_jump_to_first_child=0
+    let g:vimfiler_ignore_pattern='^\%(\.git\|\.hg\)$'
+    let g:vimfiler_data_directory=s:get_cache_dir('vimfiler')
+    "autocmd VimEnter * VimFiler
+    "autocmd VimEnter * if !argc() | VimFiler | endif
+    autocmd FileType vimfiler nunmap <buffer> <C-l>
+    autocmd FileType vimfiler nunmap <buffer> <C-j>
+    autocmd FileType vimfiler nunmap <buffer> l
+    autocmd FileType vimfiler nmap <buffer> l <Plug>(vimfiler_cd_or_edit)
+    autocmd FileType vimfiler nmap <buffer> h <Plug>(vimfiler_switch_to_parent_directory)
+    autocmd FileType vimfiler nmap <buffer> <C-R> <Plug>(vimfiler_redraw_screen)
+    autocmd FileType vimfiler nmap <buffer> <Leader>sd <Plug>(vimfiler_mark_current_line):call VimfilerSearch()<CR>
+    autocmd FileType vimfiler nmap <silent><buffer><expr> <CR> vimfiler#smart_cursor_map("\<Plug>(vimfiler_expand_tree)", "\<Plug>(vimfiler_edit_file)")
+    nnoremap <Leader>9 :<C-u>VimFiler -buffer-name=explorer -split -parent -winwidth=55 -toggle -no-quit<CR>
+    nnoremap <Leader>8 :<C-u>VimFiler -buffer-name=explorer -split -parent -winwidth=55 -toggle -no-quit -find<CR>
+    "}}}
+    NeoBundle 'ryanoasis/vim-webdevicons' "{{{
+    let g:webdevicons_enable = 1
+    let g:webdevicons_enable_unite = 1
+    let g:webdevicons_enable_vimfiler = 1
     "}}}
 endif "}}}
 
@@ -714,7 +721,6 @@ if count(s:settings.plugin_groups, 'ctrlp') "{{{
     NeoBundle 'DavidEGx/ctrlp-smarttabs'
     NeoBundle 'sgur/ctrlp-extensions.vim'
     NeoBundle 'jasoncodes/ctrlp-modified.vim'
-    NeoBundle 'voronkovich/ctrlp-nerdtree.vim'
     NeoBundle 'FelikZ/ctrlp-py-matcher'
     let g:airline#extensions#tabline#enabled = 1
     let g:ctrlp_cache_dir=s:get_cache_dir('ctrlp')
@@ -728,7 +734,6 @@ if count(s:settings.plugin_groups, 'ctrlp') "{{{
     let g:ctrlp_yankring_limit = 100
     let g:ctrlp_yankring_minimum_chars = 2
     let g:ctrlp_cmdpalette_execute = 1
-    let g:ctrlp_nerdtree_show_hidden=1
     let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
     let g:ctrlp_reuse_window='startify'
     let g:ctrlp_extensions = ['smarttabs', 'buffer', 'line', 'changes',
@@ -896,7 +901,7 @@ let g:unite_source_menu_menus.files.command_candidates = [
             \'exe "write !sudo tee % >/dev/null"'],
             \['▷ quick save                                                 ⌘ ,w',
             \'normal ,w'],
-            \['▷ open ranger                                                ⌘ ,x',
+            \['▷ open ranger                                                                           ⌘ ,x',
             \'call RangerChooser()'],
             \['▷ open vimfiler                                              ⌘ ,X',
             \'VimFiler'],
@@ -1519,8 +1524,8 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     NeoBundle 'mhinz/vim-startify' "{{{
     let g:startify_session_dir=s:get_cache_dir('sessions')
     let g:startify_change_to_vcs_root=1
-    let g:startify_show_sessions=1
-    let g:startify_restore_position=1
+    let g:startify_show_sessions=0
+    let g:startify_restore_position=0
     let g:startify_custom_header=map(split(system('fortune'), '\n'), '"   ". v:val') + ['']
     let g:startify_list_order=[
                 \ ['=== Recent files:'], 'files',
@@ -1544,9 +1549,10 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     let g:startify_relative_path=1
     let g:startify_enable_special=0
     let g:startify_change_to_dir=0
-    let g:startify_session_autoload=1
+    let g:startify_session_autoload=0
     let g:startify_change_to_vcs_root=1
     let g:startify_session_persistence=1
+    let g:startify_disable_at_vimenter=0
     nnoremap <leader>7 :Startify<cr>
     "}}}
     NeoBundle 'scrooloose/syntastic' "{{{
@@ -1636,7 +1642,7 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     NeoBundle 'vim-scripts/utl.vim' "{{{
     "}}}
     NeoBundle 'myusuf3/numbers.vim' "{{{
-    let g:numbers_exclude = ['unite', 'tagbar', 'nerdtree', 'startify', 'undotree', 'vimshell', 'vim-stardict']
+    let g:numbers_exclude = ['unite', 'tagbar', 'vimfiler', 'startify', 'undotree', 'vimshell', 'vim-stardict']
     let g:enable_numbers = 0
     "nnoremap <silent> <leader>3 :NumbersToggle<CR>
     "autocmd FocusLost * :set number
@@ -1712,8 +1718,8 @@ nnoremap <down> :tabprev<CR>
 "}}}
 
 " smash escape {{{
-inoremap jk <esc>
-inoremap kj <esc>
+"inoremap jk <esc>
+"inoremap kj <esc>
 "}}}
 
 " insert a line break where the cursor is in Vim without entering into insert mode? {{{
