@@ -236,8 +236,9 @@ function! Preserve(command) "{{{
 endfunction "}}}
 nmap <leader>zf :call Preserve("normal gg=G")<cr>
 vmap <leader>feg :sort<cr>
-autocmd BufWritePre *.sh :normal gg=G
-autocmd BufWritePre *.py :normal gg=G
+"autocmd BufWritePre *.sh :normal gg=G
+"autocmd BufWritePre *.py :normal gg=G
+"autocmd BufWritePre * :normal gg=G
 "}}}
 
 "Toggle cursorline and cursorcolumn function in VIM {{{
@@ -265,7 +266,7 @@ endfunction "}}}
 function! CloseWindowOrKillBuffer()
     let number_of_windows_to_this_buffer = len(filter(range(1, winnr('$')), "winbufnr(v:val) == bufnr('%')"))
     " never bdelete a nerd tree
-    if matchstr(expand("%"), 'NERD') == 'NERD'
+    if matchstr(expand("%"), 'vimfiler') == 'vimfiler'
         wincmd c
         return
     endif
@@ -304,7 +305,7 @@ set tags=tags;/
 set showfulltag
 set modeline
 set modelines=5
-set shell=/bin/bash
+set shell=/bin/zsh
 set noshelltemp                                     "use pipes
 
 " whitespace
@@ -316,7 +317,7 @@ let &tabstop=s:settings.default_indent              "number of spaces per tab fo
 let &softtabstop=s:settings.default_indent          "number of spaces per tab in insert mode
 let &shiftwidth=s:settings.default_indent           "number of spaces when indenting
 set list                                            "highlight whitespace
-set listchars=tab:│\ ,trail:•,extends:❯,precedes:❮
+set listchars=tab:¦\ ,trail:•,extends:❯,precedes:❮
 set shiftround
 set linebreak
 let &showbreak='↪ '
@@ -684,7 +685,7 @@ if count(s:settings.plugin_groups, 'navigation') "{{{
     NeoBundle 'Shougo/vimfiler.vim' "{{{
     let g:vimfiler_data_directory=s:get_cache_dir('vimfiler')
     let g:vimfiler_as_default_explorer=1
-    let g:vimfiler_safe_mode_by_default=1
+    let g:vimfiler_safe_mode_by_default=0
     let g:vimfiler_tree_leaf_icon=" "
     let g:vimfiler_tree_closed_icon='▸'
     let g:vimfiler_tree_opened_icon='▾'
@@ -721,13 +722,13 @@ if count(s:settings.plugin_groups, 'navigation') "{{{
     let g:choosewin_overlay_enable = 1
     let g:choosewin_overlay_clear_multibyte = 1
     let g:choosewin_color_overlay = {
-          \ 'gui': ['DodgerBlue3', 'DodgerBlue3' ],
-          \ 'cterm': [ 25, 25 ]
-          \ }
+                \ 'gui': ['DodgerBlue3', 'DodgerBlue3' ],
+                \ 'cterm': [ 25, 25 ]
+                \ }
     let g:choosewin_color_overlay_current = {
-          \ 'gui': ['firebrick1', 'firebrick1' ],
-          \ 'cterm': [ 124, 124 ]
-          \ }
+                \ 'gui': ['firebrick1', 'firebrick1' ],
+                \ 'cterm': [ 124, 124 ]
+                \ }
     let g:choosewin_blink_on_land      = 1 " dont' blink at land
     let g:choosewin_statusline_replace = 1 " don't replace statusline
     let g:choosewin_tabline_replace    = 1 " don't replace tabline
@@ -1540,6 +1541,8 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     NeoBundle 'yssl/autocwd.vim'
     NeoBundle 'pbrisbin/vim-mkdir'
     NeoBundle 'moll/vim-bbye'
+    nnoremap <Leader>q :Bdelete<CR>
+    "command! -bang -complete=buffer -nargs=? Bclose Bdelete<bang> <args>
     NeoBundle 'mhinz/vim-startify' "{{{
     let g:startify_session_dir=s:get_cache_dir('sessions')
     let g:startify_change_to_vcs_root=1
@@ -1556,7 +1559,9 @@ if count(s:settings.plugin_groups, 'misc') "{{{
                 \ '~/Documents/script',
                 \ '~/Documents/tank',
                 \ '~/Documents/tecmint',
+                \ '~/Documents/bash',
                 \ '~/.vim/vimrc',
+                \ '~/Documents/notes/vim/vimfiler',
                 \ '~/.zshrc',
                 \ ]
     let g:startify_skiplist = [
@@ -1677,7 +1682,7 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     "}}}
     NeoBundle 'fmoralesc/vim-pad' "{{{
     let g:pad#dir="~/Documents/notes/"
-    "let g:pad#default_format = "vim-notes"
+    let g:pad#default_format = "vim-notes"
     let g:pad#search_backend = "ag"
     let g:pad#open_in_split=0
     let g:pad#position=["list"]
@@ -1686,7 +1691,8 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     nmap <localleader>ll <Plug>(pad-list)
     "}}}
     NeoBundle 'xolox/vim-notes' "{{{
-    let g:notes_suffix = '.txt'
+    let g:notes_directories = ['~/Documents/notes']
+    let g:notes_suffix = ''
     "}}}
     NeoBundle 'fmoralesc/vim-tutor-mode' "{{{
     "}}}
