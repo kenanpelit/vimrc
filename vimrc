@@ -236,7 +236,7 @@ function! Preserve(command) "{{{
 endfunction "}}}
 nmap <leader>zf :call Preserve("normal gg=G")<cr>
 vmap <leader>feg :sort<cr>
-"autocmd BufWritePre *.sh :normal gg=G
+autocmd BufWritePre *.sh :normal gg=G
 "autocmd BufWritePre *.py :normal gg=G
 "autocmd BufWritePre * :normal gg=G
 "}}}
@@ -347,15 +347,15 @@ set smartcase                                       "do case-sensitive if there'
 set dictionary+=n$HOME/.vim/dict/tr-words
 set viminfo+=n$HOME/.vim/.cache/viminfo
 
-if executable('ack')
-    set grepprg=ack\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow\ $*
-    set grepformat=%f:%l:%c:%m
-endif
+"if executable('ack')
+"    set grepprg=ack\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow\ $*
+"    set grepformat=%f:%l:%c:%m
+"endif
 
-if executable('ag')
-    set grepprg=ag\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow
-    set grepformat=%f:%l:%c:%m
-endif
+"if executable('ag')
+"    set grepprg=ag\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow
+"    set grepformat=%f:%l:%c:%m
+"endif
 
 " vim file/folder management {{{
 " persistent undo
@@ -660,9 +660,9 @@ if count(s:settings.plugin_groups, 'navigation') "{{{
     let g:bookmark_sign='⚑'
     let g:bookmark_highlight_lines=0
     let g:bookmark_save_per_working_dir=0
-    let g:bookmark_manage_per_buffer=1
+    let g:bookmark_manage_per_buffer=0
     let g:bookmark_auto_close=1
-    let g:bookmark_auto_save=0
+    let g:bookmark_auto_save=1
     let g:bookmark_auto_save_file=s:get_cache_dir('bookmark')
     let g:bookmark_center=1
     let g:bookmark_no_default_key_mappings=0
@@ -765,7 +765,7 @@ if count(s:settings.plugin_groups, 'ctrlp') "{{{
                 \ \Music\|\Movies\|Pictures\|undo\|chromium\|\.thunderbird\|\.pdf$\|\.epub$\|\.gitmodules$\|\.mobi$\|\.rar$\|\.png$\|
                 \ \.jpg$\|\.dmg$\|\.nib$\|\.bz$\|\.gz$\|\.tar$\|\.avi\|\.mp3$\|\.flac\|\.mp4$\|\.gitmodules$\|\.xib$'
     if executable('ag') "{{{
-        let g:ctrlp_user_command="ag %s -l --nocolor -g '"+ g:ctrlp_custom_ignore +"'"
+        let g:ctrlp_user_command="ag --vimgrep'"+ g:ctrlp_custom_ignore +"'"
     endif
     "}}}
     nmap <localleader> [ctrlp]
@@ -788,21 +788,24 @@ if count(s:settings.plugin_groups, 'unite') "{{{
         call unite#custom#source('file_mru,file_rec,file_rec/async,grep,locate',
                     \ 'ignore_pattern', join(['\.git/', 'tmp/', 'bundle/', '.pip/', '.fonts/',
                     \ '.mozilla/', '.thunderbird/', '.cache/', '.ccache/', '.local/share/', '.local/lib/',
-                    \ '.config/', '.gnome*', '.gconf/', '.purple/', '.macromedia/', 'Music/', 'Downloads/'], '\|'))
+                    \ '.config/', '.gnome*', '.gconf/', '.purple/', '.macromedia/', 'Music/', 'VirtualBox VMs/', 'Videos/', 'Downloads/'], '\|'))
         call unite#custom#profile('default', 'context', {
                     \ 'start_insert': 1
                     \ })
     endfunction
     let g:unite_data_directory=s:get_cache_dir('unite')
-    let g:unite_enable_start_insert=0
+    let g:unite_enable_start_insert=1
     let g:unite_source_history_yank_enable=1
-    let g:unite_source_rec_max_cache_files=1000
-    let g:unite_source_file_mru_limit = 200
+    let g:unite_source_file_rec_async_command='ag --nocolor --nogroup -g ""'
+    let g:unite_source_file_rec_max_cache_files = 1000000
+    let g:unite_source_rec_max_cache_files = 1000000
+    let g:unite_source_file_mru_limit = 300
     let g:unite_source_grep_default_opts="-iRHn"
     let g:unite_source_menu_menus = {}
     let g:unite_enable_short_source_mes = 0
     let g:unite_force_overwrite_statusline = 0
-    let g:unite_update_time = 200
+    let g:unite_cursor_line_highlight = 'TabLineSel'
+    let g:unite_update_time = 500
     let g:unite_prompt='❯❯❯ '
     let g:unite_marked_icon='✓'
     let g:unite_source_buffer_time_format='(%d-%m-%Y %H:%M:%S) '
@@ -810,17 +813,18 @@ if count(s:settings.plugin_groups, 'unite') "{{{
     let g:unite_source_directory_mru_time_format='(%d-%m-%Y %H:%M:%S) '
 
     if executable('ag')
-        let g:unite_source_grep_command='ag'
-        let g:unite_source_grep_default_opts='-l --nogroup --nocolor --column --line-numbers --nocolor -g'
-        let g:unite_source_grep_recursive_opt=''
+        " Use ag in unite grep source.
+        let g:unite_source_grep_command = 'ag'
+        let g:unite_source_grep_default_opts = '--nocolor --nogroup -g ""'
+        let g:unite_source_grep_recursive_opt = ''
         let g:unite_source_grep_search_word_highlight = 1
     elseif executable('ack')
-        let g:unite_source_grep_command='ack'
-        let g:unite_source_grep_default_opts='--no-heading --no-color -C4'
-        let g:unite_source_grep_recursive_opt=''
+        " Use ack in unite grep source.
+        let g:unite_source_grep_command = 'ack'
+        let g:unite_source_grep_default_opts = '--no-heading --no-color -a'
+        let g:unite_source_grep_recursive_opt = ''
         let g:unite_source_grep_search_word_highlight = 1
     endif
-
     function! s:unite_settings()
         nmap <buffer> Q <plug>(unite_exit)
         nmap <buffer> <esc> <plug>(unite_exit)
@@ -845,7 +849,8 @@ if count(s:settings.plugin_groups, 'unite') "{{{
     nnoremap <silent> [unite]/ :<C-u>Unite -no-quit -buffer-name=search grep:.<cr>
     nnoremap <silent> [unite]m :<C-u>Unite -auto-resize -buffer-name=mappings mapping<cr>
     nnoremap <silent> [unite]s :<C-u>Unite -quick-match buffer<cr>
-    nnoremap <silent> [unite]d :<C-u>UniteWithInputDirectory -toggle -auto-resize -buffer-name=files file_rec/async:!<cr><c-u>
+    nnoremap <silent> [unite]p :<C-u>UniteWithInputDirectory -toggle -auto-resize -buffer-name=files file_rec/async:!<cr><c-u>
+    "nnoremap <silent> [unite]p :<C-u>Unite file_rec/async<cr>
     "}}}
     NeoBundleLazy 'Shougo/neomru.vim', {'autoload':{'unite_sources':'file_mru'}}
     NeoBundleLazy 'osyo-manga/unite-airline_themes', {'autoload':{'unite_sources':'airline_themes'}} "{{{
@@ -1618,8 +1623,7 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     set wildmode=list:longest,list:full
     set wildignore+=*/tmp/*,*.o,*.obj,.git,*.rbc,*.mp3,*.flac,*.avi,*.svg,*.jpg,*.png,*.so,*.a,*.swp,*.zip,*.pyc,*.pyo,*.classh,__pycache__
     if executable("ag")
-        let g:ctrlspace_glob_command = "ag %s -l --nocolor -g '"+ g:ctrlspace_ignored_files +"'"
-        "let g:ctrlspace_glob_command = 'ag -l --nocolor -g ""'
+        let g:ctrlspace_glob_command = "ag --vimgrep '"+ g:ctrlspace_ignored_files +"'"
     endif
     "}}}
     NeoBundleLazy 'mattn/gist-vim', { 'depends': 'mattn/webapi-vim', 'autoload': { 'commands': 'Gist' } } "{{{
@@ -1703,6 +1707,80 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     let g:scratch_insert_autohide=1
     nmap <F2> :Scratch<CR>
     nmap <F3> :ScratchPreview<CR>
+    "}}}
+    NeoBundle 'junegunn/fzf' "{{{
+    command! -nargs=1 Locate call fzf#run(
+                \ {'source': 'locate <q-args>', 'sink': 'tabe', 'options': '-m +c', 'dir': '~', 'source': 'ls'})
+    " Open files in horizontal split
+    nnoremap <silent> <Leader>ü :call fzf#run({
+                \   'down': '40%',
+                \   'sink': 'botright split' })<CR>
+    " Open files in vertical horizontal split
+    nnoremap <silent> <Leader>t :call fzf#run({
+                \   'right': winwidth('.') / 2,
+                \   'sink':  'vertical botright split' })<CR>
+    function! s:ag_to_qf(line)
+        let parts = split(a:line, ':')
+        return {'filename': parts[0], 'lnum': parts[1], 'col': parts[2],
+                    \ 'text': join(parts[3:], ':')}
+    endfunction
+    function! s:ag_handler(lines)
+        if len(a:lines) < 2 | return | endif
+        let cmd = get({'ctrl-x': 'split',
+                    \ 'ctrl-v': 'vertical split',
+                    \ 'ctrl-t': 'tabe'}, a:lines[0], 'e')
+        let list = map(a:lines[1:], 's:ag_to_qf(v:val)')
+        let first = list[0]
+        execute cmd escape(first.filename, ' %#\')
+        execute first.lnum
+        execute 'normal!' first.col.'|zz'
+        if len(list) > 1
+            call setqflist(list)
+            copen
+            wincmd p
+        endif
+    endfunction
+    command! -nargs=* Ag call fzf#run({
+                \ 'source':  printf('ag --nogroup --column --color "%s"',
+                \                   escape(empty(<q-args>) ? '^(?=.)' : <q-args>, '"\')),
+                \ 'sink*':    function('<sid>ag_handler'),
+                \ 'options': '--ansi --expect=ctrl-t,ctrl-v,ctrl-x --delimiter : --nth 4.. '.
+                \            '--multi --bind ctrl-a:select-all,ctrl-d:deselect-all '.
+                \            '--color hl:68,hl+:110',
+                \ 'down':    '50%'
+                \ })
+    " List of buffers
+    function! s:buflist()
+        redir => ls
+        silent ls
+        redir END
+        return split(ls, '\n')
+    endfunction
+    function! s:bufopen(e)
+        execute 'buffer' matchstr(a:e, '^[ 0-9]*')
+    endfunction
+    nnoremap <silent> <Leader><Enter> :call fzf#run({
+                \   'source':  reverse(<sid>buflist()),
+                \   'sink':    function('<sid>bufopen'),
+                \   'options': '+m',
+                \   'down':    len(<sid>buflist()) + 2
+                \ })<CR>
+    command! FZFMru call fzf#run({
+                \  'source':  v:oldfiles,
+                \  'sink':    'e',
+                \  'options': '-m -x +s',
+                \  'down':    '40%'})
+    command! FZFMru call fzf#run({
+                \ 'source':  reverse(s:all_files()),
+                \ 'sink':    'edit',
+                \ 'options': '-m -x +s',
+                \ 'down':    '40%' })
+    function! s:all_files()
+        return extend(
+                    \ filter(copy(v:oldfiles),
+                    \        "v:val !~ 'fugitive:\\|NERD_tree\\|^/tmp/\\|.git/'"),
+                    \ map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), 'bufname(v:val)'))
+    endfunction
     "}}}
     NeoBundle 'luochen1990/rainbow' "{{{
     let g:rainbow_active = 0 "0 if you want to enable it later via :RainbowToggle
