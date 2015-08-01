@@ -298,7 +298,7 @@ endif
 
 set hidden                                          "allow buffer switching without saving
 set autoread                                        "auto reload if file saved externally
-set fileformats+=mac                                "add mac to auto-detection of file format line endings
+set fileformats+=unix                               "add mac to auto-detection of file format line endings
 set nrformats-=octal                                "always assume decimal numbers
 set showcmd
 set tags=tags;/
@@ -926,13 +926,10 @@ let g:unite_source_menu_menus.files.command_candidates = [
             \'exe "write !sudo tee % >/dev/null"'],
             \['▷ quick save                                                 ⌘ ,w',
             \'normal ,w'],
-            \['▷ open ranger                                                                           ⌘ ,x',
-            \'call RangerChooser()'],
             \['▷ open vimfiler                                              ⌘ ,X',
             \'VimFiler'],
             \]
-nnoremap <silent>[menu]o :Unite -silent -winheight=17 -start-insert
-            \ menu:files<CR>
+nnoremap <silent>[menu]o :Unite -silent -winheight=17 -start-insert menu:files<CR>
 " }}}
 
 " file searching menu {{{
@@ -1566,7 +1563,7 @@ if count(s:settings.plugin_groups, 'misc') "{{{
                 \ '~/Documents/tank',
                 \ '~/Documents/tecmint',
                 \ '~/Documents/bash',
-                \ '~/.vim/vimrc',
+                \ '~/Documents/tank/vimrc/.vim/vimrc',
                 \ '~/Documents/notes/vim/vimfiler',
                 \ '~/.zshrc',
                 \ ]
