@@ -32,5 +32,68 @@ The updated version is [here](https://github.com/kenanpelit/seoul256.vim).
 * Use **`<leader>tn`** to open a new tab
 * Use **`<leader>tn`** to close the current tab
 
+### Keymap
+
+#### Leader
+
+* **`<Leader>0`** | StripWhitespace
+* **`<Leader>1`** | AutoSaveToggle
+* **`<Leader>2`** | RainbowToggle
+* **`<Leader>3`** | ToggleRelativeAbsoluteNumber
+* **`<Leader>4`** | TagbarToggle
+* **`<Leader>5`** | UndotreeToggle
+* **`<Leader>6`** | NERDComment
+* **`<Leader>7`** | Startify
+* **`<Leader>8`** | VimFiler Toggle
+* **`<Leader>9`** | VimFiler Toggle Find
+* **`<Leader>nbu`** | Unite neobundle/update
+* **`<Leader>c`** | VimShell -split
+* **`<Leader>cv`** | VimShellPop
+* **`<Leader>cp`** | VimShellInteractive python
+* **`<Leader>ef`** | Unite output:WordFrequency
+* **`<Leader>em`** | Text statistics
+* **`<Leader>ev`** | Edit vsplit ~/.vim/vimrc
+* **`<Leader>fef`** | Preserve("normal gg=G")
+* **`<Leader>feg`** | Sort
+* **`<Leader>fg`** | Last search in quickfix
+* **`<Leader>fw`** | Current word in quickfix
+* **`<Leader>...`** | ...
+
+#### LocalLeader
+
+* **`<LocalLeader>a`** | Unite grep (ag → ack → grep)
+* **`<LocalLeader>b`** | Unite menu:navigation
+* **`<LocalLeader>c`** | Unite menu:colorv
+* **`<LocalLeader>d`** | Unite ~
+* **`<LocalLeader>e`** | Unite menu:text
+* **`<LocalLeader>f`** | Unite menu:searching
+* **`<LocalLeader>g`** | Unite menu:git
+* **`<LocalLeader>i`** | Unite menu:registers
+* **`<LocalLeader>k`** | Unite menu:markdown
+* **`<LocalLeader>l`** | Unite ~
+* **`<LocalLeader>m`** | Unite menu:bookmarks
+* **`<LocalLeader>n`** | Unite menu:neobundle
+* **`<LocalLeader>o`** | Unite menu:files
+* **`<LocalLeader>p`** | Unite menu:code
+* **`<LocalLeader>r`** | Unite menu:rest
+* **`<LocalLeader>s`** | Unite menu:spelling
+* **`<LocalLeader>t`** | Unite menu:tabularize
+* **`<LocalLeader>u`** | Unite **menu:menu**
+* **`<LocalLeader>v`** | Unite **menu:vim**
+* **`<LocalLeader>...`** | Unite ~
+
+#### F Keys
+
+* **`<F2>`** | Scratch
+* **`<F3>`** | ScratchPreview
+* **`<F4>`** | ToggleGoldenViewAutoResize
+* **`<F5>`** | Multiple Cursors Start
+* **`<F6>`** | PasteMode
+* **`<F7>`** | ToggleCurline
+* **`<F8>`** | Echo
+* **`<F9>`** | Python -> !python %
+* **`<F10>`** | Bash -> !./%
+* **`<F11>`** | ~
+* **`<F12>`** | ~
 ---
 *To be continued...*
