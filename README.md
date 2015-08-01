@@ -32,4 +32,5 @@ The updated version is [here](https://github.com/kenanpelit/seoul256.vim).
 * Use `<leader>tn` to open a new tab
 * Use `<leader>tn` to close the current tab
 
-# To be continued...
+---
+*To be continued...*
