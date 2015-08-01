@@ -144,7 +144,7 @@ function! s:QuickfixToggle()
     copen
 endfunction
 command! ToggleQuickfix call <SID>QuickfixToggle()
-nnoremap <silent> <leader>q :ToggleQuickfix<CR>
+nnoremap <silent> <leader>qu :ToggleQuickfix<CR>
 " }}}
 
 " get the word frequency in the text {{{
@@ -234,7 +234,7 @@ function! Preserve(command) "{{{
     let @/=_s
     call cursor(l, c)
 endfunction "}}}
-nmap <leader>zf :call Preserve("normal gg=G")<cr>
+nmap <leader>fef :call Preserve("normal gg=G")<cr>
 vmap <leader>feg :sort<cr>
 autocmd BufWritePre *.sh :normal gg=G
 "autocmd BufWritePre *.py :normal gg=G
@@ -343,6 +343,10 @@ set incsearch                                       "incremental searching
 set ignorecase                                      "ignore case for searching
 set smartcase                                       "do case-sensitive if there's a capital letter
 
+" modifiable
+setlocal modifiable
+set modifiable
+
 " dict
 set dictionary+=n$HOME/.vim/dict/tr-words
 set viminfo+=n$HOME/.vim/.cache/viminfo
@@ -388,6 +392,8 @@ set timeoutlen=600
 "}}}
 
 " ui configuration {{{
+set equalalways
+set shortmess+=I
 set showmatch                                       "automatically highlight matching braces/brackets/etc.
 set matchtime=2                                     "tens of a second to show matching parentheses
 "set number
@@ -441,15 +447,9 @@ if count(s:settings.plugin_groups, 'core') "{{{
     let g:airline_powerline_fonts=1
     let g:airline_theme='ubaryd'
     autocmd User Startified AirlineRefresh
-    "nmap <leader>1 <Plug>AirlineSelectTab1
     "nmap <leader>2 <Plug>AirlineSelectTab2
     "nmap <leader>3 <Plug>AirlineSelectTab3
     "nmap <leader>4 <Plug>AirlineSelectTab4
-    "nmap <leader>5 <Plug>AirlineSelectTab5
-    "nmap <leader>6 <Plug>AirlineSelectTab6
-    "nmap <leader>7 <Plug>AirlineSelectTab7
-    "nmap <leader>8 <Plug>AirlineSelectTab8
-    "nmap <leader>9 <Plug>AirlineSelectTab9
     "}}}
     NeoBundle 'tpope/vim-surround'
     NeoBundle 'tpope/vim-repeat'
@@ -570,6 +570,7 @@ if count(s:settings.plugin_groups, 'autocomplete') "{{{
         let g:UltiSnipsJumpForwardTrigger="<tab>"
         let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
         let g:UltiSnipsSnippetsDir='~/.vim/snippets'
+        let g:UltiSnipsEditSplit="vertical"
         "}}}
     else
         NeoBundle 'Shougo/neosnippet-snippets'
@@ -628,13 +629,12 @@ endif "}}}
 if count(s:settings.plugin_groups, 'navigation') "{{{
     NeoBundle 'mileszs/ack.vim' "{{{
     if executable('ag')
-        "let g:ackprg = "ag --nogroup --column --smart-case --follow"
-        let g:ackprg = "ag --vimgrep"
+        let g:ackprg = "ag --nogroup --column --smart-case --follow"
     endif
     "}}}
     NeoBundle 'rking/ag.vim' "{{{
     set runtimepath^=~/.vim/bundle/ag
-    let g:agprg="ag --vimgrep"
+    let g:ackprg = "ag --nogroup --column --smart-case --follow"
     "}}}
     NeoBundleLazy 'mbbill/undotree', {'autoload':{'commands':'UndotreeToggle'}} "{{{
     let g:undotree_WindowLayout=3
@@ -832,14 +832,13 @@ if count(s:settings.plugin_groups, 'unite') "{{{
     endfunction
     autocmd FileType unite call s:unite_settings()
 
-    nnoremap <leader>nbu :Unite neobundle/update -vertical -no-start-insert<cr>
-
     nmap <space> [unite]
     nnoremap [unite] <nop>
 
     nmap <localleader> [menu]
     nnoremap <silent>[menu]u :Unite -silent -winheight=12 menu<cr>
 
+    nnoremap <leader>nbu :Unite neobundle/update -vertical -no-start-insert<cr>
     nnoremap <silent> [unite]<space> :<C-u>Unite -toggle -auto-resize -buffer-name=mixed file_rec/async:! buffer file_mru bookmark<cr><c-u>
     nnoremap <silent> [unite]f :<C-u>Unite -toggle -auto-resize -buffer-name=files file_rec/async:!<cr><c-u>
     nnoremap <silent> [unite]e :<C-u>Unite -buffer-name=recent file_mru<cr>
@@ -849,6 +848,7 @@ if count(s:settings.plugin_groups, 'unite') "{{{
     nnoremap <silent> [unite]/ :<C-u>Unite -no-quit -buffer-name=search grep:.<cr>
     nnoremap <silent> [unite]m :<C-u>Unite -auto-resize -buffer-name=mappings mapping<cr>
     nnoremap <silent> [unite]s :<C-u>Unite -quick-match buffer<cr>
+    nnoremap <silent> [unite]bm :<C-u>Unite -silent -auto-resize -buffer-name=my-directories -default-action=vimfiler bookmark<CR>
     nnoremap <silent> [unite]p :<C-u>UniteWithInputDirectory -toggle -auto-resize -buffer-name=files file_rec/async:!<cr><c-u>
     "nnoremap <silent> [unite]p :<C-u>Unite file_rec/async<cr>
     "}}}
@@ -1550,6 +1550,7 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     "command! -bang -complete=buffer -nargs=? Bclose Bdelete<bang> <args>
     NeoBundle 'mhinz/vim-startify' "{{{
     let g:startify_session_dir=s:get_cache_dir('sessions')
+    let g:startify_disable_at_vimenter=0
     let g:startify_change_to_vcs_root=1
     let g:startify_show_sessions=0
     let g:startify_restore_position=0
@@ -1581,7 +1582,6 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     let g:startify_session_autoload=0
     let g:startify_change_to_vcs_root=1
     let g:startify_session_persistence=1
-    let g:startify_disable_at_vimenter=0
     nnoremap <leader>7 :Startify<cr>
     "}}}
     NeoBundle 'scrooloose/syntastic' "{{{
@@ -1639,7 +1639,7 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     let g:vimshell_enable_transient_user_prompt=1
     let g:vimshell_external_history_path=expand('~/.zsh-history')
     nnoremap <leader>c :VimShell -split<cr>
-    nnoremap <leader>cc :VimShell -split<cr>
+    nnoremap <leader>cv :VimShellPop<cr>
     nnoremap <leader>cp :VimShellInteractive python<cr>
     "}}}
     NeoBundle 'ntpeters/vim-better-whitespace' "{{{
@@ -1707,6 +1707,26 @@ if count(s:settings.plugin_groups, 'misc') "{{{
     let g:scratch_insert_autohide=1
     nmap <F2> :Scratch<CR>
     nmap <F3> :ScratchPreview<CR>
+    "}}}
+    NeoBundle 'aperezdc/vim-template' "{{{
+    let g:templates_directory='$HOME/.vim/templates'
+    "}}}
+    NeoBundle 'luochen1990/rainbow' "{{{
+    let g:rainbow_active = 0 "0 if you want to enable it later via :RainbowToggle
+    nnoremap <leader>2 :RainbowToggle<CR>
+    let g:rainbow_conf = {
+                \   'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
+                \   'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
+                \   'operators': '_,_',
+                \   'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
+                \   'separately': {
+                \       '*': {},
+                \       'tex': {'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/']},
+                \       'vim': {'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody']},
+                \       'html': {'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold']},
+                \       'css': 0,
+                \   }
+                \}
     "}}}
     NeoBundle 'junegunn/fzf' "{{{
     command! -nargs=1 Locate call fzf#run(
@@ -1781,23 +1801,6 @@ if count(s:settings.plugin_groups, 'misc') "{{{
                     \        "v:val !~ 'fugitive:\\|NERD_tree\\|^/tmp/\\|.git/'"),
                     \ map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), 'bufname(v:val)'))
     endfunction
-    "}}}
-    NeoBundle 'luochen1990/rainbow' "{{{
-    let g:rainbow_active = 0 "0 if you want to enable it later via :RainbowToggle
-    nnoremap <leader>2 :RainbowToggle<CR>
-    let g:rainbow_conf = {
-                \   'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
-                \   'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
-                \   'operators': '_,_',
-                \   'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
-                \   'separately': {
-                \       '*': {},
-                \       'tex': {'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/']},
-                \       'vim': {'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody']},
-                \       'html': {'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold']},
-                \       'css': 0,
-                \   }
-                \}
     "}}}
 endif "}}}
 
@@ -1932,6 +1935,7 @@ nnoremap <C-c> <C-c>:echo<cr>
 "}}}
 
 nnoremap <leader>w :w<cr>
+nnoremap <leader>z :q!<cr>
 
 " quick buffer open {{{
 nnoremap gb :ls<cr>:e #
@@ -2010,6 +2014,7 @@ autocmd FileType python setlocal foldmethod=indent
 autocmd FileType sh setlocal foldmethod=indent
 autocmd FileType markdown setlocal nolist
 autocmd FileType vim setlocal fdm=indent keywordprg=:help
+"au VimEnter * vnew
 "}}}
 
 " color schemes {{{
