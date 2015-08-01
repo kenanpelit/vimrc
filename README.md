@@ -5,37 +5,36 @@ The ultimate vim configuration
 
 ![My Vim](https://github.com/kenanpelit/vimrc/blob/master/ss/vim01.png)
 
-#### Themes (ColorSchemes)
+### Themes (ColorSchemes)
 
 * **seoul256.vim** is a low-contrast Vim color scheme based on [Seoul Colors](http://www.seoul.go.kr/v2012/seoul/symbol/color.html).
 Works on 256-color terminal or on GVim.
 The updated version is [here](https://github.com/kenanpelit/seoul256.vim).
 
-### #File Browser (VimFiler)
+### File Browser (VimFiler)
 
 * Use **`<Leader>9`** to toggle the file browser
 * Use **`<Leader>8`** to toggle the find open file in the file browser
 * Use standard movement keys to move around
 
-#### Viewports (Windows/Splits)
+### Viewports (Windows/Splits)
 
 * Use **`<Leader>h`** **`<Leader>j`** **`<Leader>k`** **`<Leader>l`** to navigate between viewports
 * Use **`<Leader>q`** to close the current window
 
-#### Tabs
+### Tabs
 
 * Use **`<leader>tn`** to open a new tab
 * Use **`<leader>tn`** to close the current tab
 
-#### Keymap
+### Keymap
 
-##### Leader & LocalLeader Key
+#### Leader & LocalLeader Key
 
 * The Leader key is **`space`**
 * The LocalLeader key is **`comma`**
 
-
-##### Leader
+#### Leader
 
 | Shortcut                      | Command                                   |
 | ----------------------------- | ----------------------------------------- |
@@ -62,7 +61,7 @@ The updated version is [here](https://github.com/kenanpelit/seoul256.vim).
 |  **`<Leader>fw`**             | Current word in quickfix                  |
 |  **`<Leader>...`**            | ...                                       |
 
-##### LocalLeader
+#### LocalLeader
 
 | Shortcut                      | Command                                   |
 | ----------------------------- | ----------------------------------------- |
@@ -87,7 +86,7 @@ The updated version is [here](https://github.com/kenanpelit/seoul256.vim).
 |  **`<LocalLeader>v`**         | Unite **menu:vim**                        |
 |  **`<LocalLeader>...`**       | Unite ~                                   |
 
-##### F Keys
+#### F Keys
 
 | Shortcut                      | Command                                   |
 | ----------------------------- | ----------------------------------------- |
@@ -105,9 +104,9 @@ The updated version is [here](https://github.com/kenanpelit/seoul256.vim).
 
 ---
 
-#### [NeoBundle](https://github.com/Shougo/neobundle.vim)
+### [NeoBundle](https://github.com/Shougo/neobundle.vim)
 
-##### NeoBundle is a next generation Vim plugin manager.
+#### NeoBundle is a next generation Vim plugin manager.
 
 * '907th/vim-auto-save' " Automatically save changes to disk in Vim
 * 'DavidEGx/ctrlp-smarttabs'
@@ -243,4 +242,5 @@ The updated version is [here](https://github.com/kenanpelit/seoul256.vim).
 * 'zhaocai/GoldenView.Vim' " Always have a nice view for vim split windows!
 
 ---
+
 *To be continued...*
