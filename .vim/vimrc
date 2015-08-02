@@ -522,7 +522,7 @@ if count(s:settings.plugin_groups, 'scm')
     autocmd FileType gitcommit nmap <buffer> U :Git checkout -- <C-r><C-g><CR>
     autocmd BufReadPost fugitive://* set bufhidden=delete
     NeoBundle 'airblade/vim-gitgutter' " A Vim plugin which shows a git diff in the gutter (sign column) and stages/reverts hunks.
-    NeoBundle 'junegunn/vim-github-dashboard' " :octocat: Browse GitHub events in Vim
+    "NeoBundle 'junegunn/vim-github-dashboard' " :octocat: Browse GitHub events in Vim
     NeoBundleLazy 'gregsexton/gitv', {'depends':['tpope/vim-fugitive'], 'autoload':{'commands':'Gitv'}} " gitk for Vim.
     nnoremap <silent> <localleader>gv :Gitv<CR>
     nnoremap <silent> <localleader>gV :Gitv!<CR>
@@ -1618,7 +1618,8 @@ if count(s:settings.plugin_groups, 'misc')
                 \       'css': 0,
                 \   }
                 \}
-    NeoBundle 'junegunn/fzf' " :cherry_blossom: A command-line fuzzy finder written in Go
+    NeoBundle 'junegunn/fzf', {'build': {'linux': './install'}} " :cherry_blossom: A command-line fuzzy finder written in Go
+    "set rtp+=~/.fzf
     command! -nargs=1 Locate call fzf#run(
                 \ {'source': 'locate <q-args>', 'sink': 'tabe', 'options': '-m +c', 'dir': '~', 'source': 'ls'})
     " Open files in horizontal split
