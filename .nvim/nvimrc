@@ -1,13 +1,11 @@
 "*****************************************************************************
-"                       __   _(_)_ __ ___  _ __ ___
-"                       \ \ / / | '_ ` _ \| '__/ __|
-"                        \ V /| | | | | | | | | (__
-" kenp                  (_)_/ |_|_| |_| |_|_|  \___|
-"*****************************************************************************
-" http://neovim.io/doc/user/vim_diff.html#vim-differences
-" NeoBundle core
-"*****************************************************************************
-" Note: Skip initialization for vim-tiny or vim-small.
+"          http://neovim.io/doc/user/vim_diff.html#vim-differences
+"                          _  ___   ___
+"                         | \| \ \ / (_)_ __
+"                         | .` |\ V /| | '  \
+" kenp                    |_|\_| \_/ |_|_|_|_|
+"****************************************************************************
+"Note: Skip initialization for vim-tiny or vim-small.
 if !1 | finish | endif
 
 if has('vim_starting')
@@ -387,24 +385,6 @@ if s:settings.enable_cursorcolumn
     set cursorcolumn
     autocmd WinLeave * setlocal nocursorcolumn
     autocmd WinEnter * setlocal cursorcolumn
-endif
-
-if has('gui_running')
-    "set lines=999 columns=9999                        "open a maximize"
-    set mouse=a                                        "enable mouse
-    set lines=60
-    set columns=180
-    set guioptions=i
-    set guioptions+=t                                 "tear off menu items
-    set guioptions-=T                                 "toolbar icons
-    autocmd InsertLeave * hi Cursor guibg=DodgerBlue3
-    autocmd InsertEnter * hi Cursor guibg=red
-    let g:goldenview_enable_at_startup=0
-    set gfn=Ubuntu\ Mono\ 16
-endif
-
-if $COLORTERM == 'gnome-terminal'
-    set t_Co=256
 endif
 
 " plugin/mapping configuration
@@ -1470,8 +1450,8 @@ if count(s:settings.plugin_groups, 'misc')
                 \ '~/Documents/tank',
                 \ '~/Documents/tecmint',
                 \ '~/Documents/bash',
-                \ '~/Documents/tank/vimrc/.nvim/nvimrc',
-                \ '~/Documents/notes/vim/vimfiler.ms',
+                \ '~/Documents/tank/kenp/vimrc/.nvim/nvimrc',
+                \ '~/Documents/notes/vim/vimfiler.md',
                 \ '~/.zshrc',
                 \ ]
     let g:startify_skiplist = [
@@ -1579,7 +1559,7 @@ if count(s:settings.plugin_groups, 'misc')
     nmap <localleader>ll <Plug>(pad-list)
     NeoBundle 'xolox/vim-notes' " Easy note taking in Vim
     let g:notes_directories = ['~/Documents/notes']
-    let g:notes_suffix = ''
+    let g:notes_suffix = 'md'
     NeoBundle 'fmoralesc/vim-tutor-mode' " interactive tutorials for vim
     NeoBundle 'fmoralesc/vim-autogit' " autocommit changes to a file to an independent git repository
     let b:autogit_enabled=1
@@ -1869,10 +1849,8 @@ autocmd FileType vim setlocal fdm=indent keywordprg=:help
 " color schemes
 NeoBundle 'kenanpelit/seoul256.vim'
 set background=dark
-let g:seoul256_background=235
+let g:seoul256_background=236
 let s:settings.colorscheme = 'seoul256'
-"NeoBundle 'chriskempson/vim-tomorrow-theme'
-"let s:settings.colorscheme = 'Tomorrow-Night-Eighties'
 
 " finish loading
 if exists('g:dotvim_settings.disabled_plugins')
