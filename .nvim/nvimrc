@@ -1470,8 +1470,8 @@ if count(s:settings.plugin_groups, 'misc')
                 \ '~/Documents/tank',
                 \ '~/Documents/tecmint',
                 \ '~/Documents/bash',
-                \ '~/Documents/tank/vimrc/.vim/vimrc',
-                \ '~/Documents/notes/vim/vimfiler',
+                \ '~/Documents/tank/vimrc/.nvim/nvimrc',
+                \ '~/Documents/notes/vim/vimfiler.ms',
                 \ '~/.zshrc',
                 \ ]
     let g:startify_skiplist = [
@@ -1871,10 +1871,8 @@ NeoBundle 'kenanpelit/seoul256.vim'
 set background=dark
 let g:seoul256_background=235
 let s:settings.colorscheme = 'seoul256'
-"NeoBundle 'tomasr/molokai'
-"let g:molokai_original = 1
-"let g:rehash256 = 1
-"let s:settings.colorscheme = 'molokai'
+"NeoBundle 'chriskempson/vim-tomorrow-theme'
+"let s:settings.colorscheme = 'Tomorrow-Night-Eighties'
 
 " finish loading
 if exists('g:dotvim_settings.disabled_plugins')
