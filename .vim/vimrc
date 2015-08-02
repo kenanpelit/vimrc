@@ -223,7 +223,7 @@ endfunction
 "}}}
 
 " formatting shortcuts {{{
-function! Preserve(command) "{{{
+function! Preserve(command)
     " preparation: save last search, and cursor position.
     let _s=@/
     let l=line(".")
@@ -233,7 +233,7 @@ function! Preserve(command) "{{{
     " clean up: restore previous search history, and cursor position
     let @/=_s
     call cursor(l, c)
-endfunction "}}}
+endfunction
 nmap <leader>fef :call Preserve("normal gg=G")<cr>
 vmap <leader>feg :sort<cr>
 autocmd BufWritePre *.sh :normal gg=G
@@ -242,7 +242,7 @@ autocmd BufWritePre *.sh :normal gg=G
 "}}}
 
 "Toggle cursorline and cursorcolumn function in VIM {{{
-fu! ToggleCurline () "{{{
+fu! ToggleCurline ()
     if &cursorline && &cursorcolumn
         set nocursorline
         set nocursorcolumn
@@ -250,16 +250,16 @@ fu! ToggleCurline () "{{{
         set cursorline
         set cursorcolumn
     endif
-endfunction "}}}
+endfunction
 nmap <F7> :call ToggleCurline()<CR>
 "}}}
 
 " vim file/folder management fonction {{{
-function! EnsureExists(path) "{{{
+function! EnsureExists(path)
     if !isdirectory(expand(a:path))
         call mkdir(expand(a:path))
     endif
-endfunction "}}}
+endfunction
 "}}}
 
 " window killer function {{{
@@ -437,7 +437,7 @@ endif
 "}}}
 
 " plugin/mapping configuration {{{
-if count(s:settings.plugin_groups, 'core') "{{{
+if count(s:settings.plugin_groups, 'core')
     NeoBundle 'vim-scripts/matchit.zip' " extended % matching for HTML, LaTeX, and many other language
     NeoBundle 'bling/vim-airline' " lean & mean status/tabline for vim that's light as airline {{{
     let g:airline#extensions#tabline#enabled=1
@@ -464,7 +464,7 @@ if count(s:settings.plugin_groups, 'core') "{{{
     NeoBundle 'Shougo/vimproc.vim', {'build': {'linux': 'make'}} " Interactive command execution in Vim.
 endif "}}}
 
-if count(s:settings.plugin_groups, 'web') "{{{
+if count(s:settings.plugin_groups, 'web')
     NeoBundleLazy 'groenewege/vim-less', {'autoload':{'filetypes':['less']}} " vim syntax for LESS (dynamic CSS)
     NeoBundleLazy 'cakebaker/scss-syntax.vim', {'autoload':{'filetypes':['scss','sass']}} " Vim syntax file for scss (Sassy CSS)
     NeoBundleLazy 'hail2u/vim-css3-syntax', {'autoload':{'filetypes':['css','scss','sass']}} " Add CSS3 syntax support to vim's built-in `syntax/css.vim`.
@@ -494,12 +494,12 @@ if count(s:settings.plugin_groups, 'web') "{{{
     "}}}
 endif "}}}
 
-if count(s:settings.plugin_groups, 'bash') "{{{
+if count(s:settings.plugin_groups, 'bash')
     NeoBundle 'vim-scripts/bash-support.vim' , {'autoload': { 'filetypes': ['sh']}} " BASH IDE -- Write and run BASH-scripts using menus and hotkeys.
     let g:BASH_SyntaxCheckOptionsGlob="-O extglob"
-endif "}}}
+endif
 
-if count(s:settings.plugin_groups, 'python') "{{{
+if count(s:settings.plugin_groups, 'python')
     NeoBundleLazy 'klen/python-mode', {'autoload':{'filetypes':['python']}} " Vim python-mode. PyLint, Rope, Pydoc, breakpoints from box. {{{
     let g:pymode_rope=0
     "}}}
@@ -508,9 +508,9 @@ if count(s:settings.plugin_groups, 'python') "{{{
     NeoBundleLazy 'davidhalter/jedi-vim', {'autoload':{'filetypes':['python']}} " Using the jedi autocompletion library for VIM. {{{
     let g:jedi#popup_on_dot=0
     "}}}
-endif "}}}
+endif
 
-if count(s:settings.plugin_groups, 'scm') "{{{
+if count(s:settings.plugin_groups, 'scm')
     NeoBundle 'mhinz/vim-signify' " Show a diff via Vim sign column. {{{
     let g:signify_update_on_bufenter=0
     "}}}
@@ -554,9 +554,9 @@ if count(s:settings.plugin_groups, 'scm') "{{{
     "}}}
 endif "}}}
 
-if count(s:settings.plugin_groups, 'autocomplete') "{{{
+if count(s:settings.plugin_groups, 'autocomplete')
     NeoBundle 'honza/vim-snippets' " vim-snipmate default snippets (Previously snipmate-snippets)
-    if s:settings.autocomplete_method == 'ycm' "{{{
+    if s:settings.autocomplete_method == 'ycm'
         NeoBundle 'Valloric/YouCompleteMe', {'vim_version':'7.3.584'} " A code-completion engine for Vim {{{
         let g:ycm_complete_in_comments_and_strings=1
         let g:ycm_key_list_select_completion=['<C-n>', '<Down>']
@@ -581,7 +581,7 @@ if count(s:settings.plugin_groups, 'autocomplete') "{{{
         smap <expr><S-TAB> pumvisible() ? "\<C-p>" : ""
         "}}}
     endif "}}}
-    if s:settings.autocomplete_method == 'neocomplete' "{{{
+    if s:settings.autocomplete_method == 'neocomplete'
         NeoBundleLazy 'Shougo/neocomplete.vim', {'autoload':{'insert':1}, 'vim_version':'7.3.885'} " Next generation completion framework after neocomplcache {{{
         let g:neocomplete#enable_at_startup=1
         let g:neocomplete#data_directory=s:get_cache_dir('neocomplete')
@@ -589,7 +589,7 @@ if count(s:settings.plugin_groups, 'autocomplete') "{{{
     endif "}}}
 endif "}}}
 
-if count(s:settings.plugin_groups, 'editing') "{{{
+if count(s:settings.plugin_groups, 'editing')
     NeoBundleLazy 'editorconfig/editorconfig-vim', {'autoload':{'insert':1}} " EditorConfig plugin for Vim
     NeoBundle 'tpope/vim-endwise' " endwise.vim: wisely add 'end' in ruby, endfunction/endif/more in vim script, etc
     NeoBundle 'tpope/vim-speeddating' " speeddating.vim: use CTRL-A/CTRL-X to increment dates, times, and more
@@ -624,7 +624,7 @@ if count(s:settings.plugin_groups, 'editing') "{{{
     "}}}
 endif "}}}
 
-if count(s:settings.plugin_groups, 'navigation') "{{{
+if count(s:settings.plugin_groups, 'navigation')
     NeoBundle 'mileszs/ack.vim' " Vim plugin for the Perl module / CLI script 'ack' {{{
     if executable('ag')
         let g:ackprg = "ag --nogroup --column --smart-case --follow"
@@ -737,7 +737,7 @@ if count(s:settings.plugin_groups, 'navigation') "{{{
     "}}}
 endif "}}}
 
-if count(s:settings.plugin_groups, 'ctrlp') "{{{
+if count(s:settings.plugin_groups, 'ctrlp')
     NeoBundle 'ctrlpvim/ctrlp.vim', { 'depends': 'tacahiroy/ctrlp-funky' } " Fuzzy file, buffer, mru, tag, etc finder {{{
     NeoBundle 'mattn/ctrlp-mark'
     NeoBundle 'DavidEGx/ctrlp-smarttabs'
@@ -781,7 +781,7 @@ if count(s:settings.plugin_groups, 'ctrlp') "{{{
     "}}}
 endif "}}}
 
-if count(s:settings.plugin_groups, 'unite') "{{{
+if count(s:settings.plugin_groups, 'unite')
     NeoBundle 'Shougo/unite.vim' " Unite and create user interfaces {{{
     let bundle = neobundle#get('unite.vim')
     function! bundle.hooks.on_source(bundle)
@@ -1495,7 +1495,7 @@ let g:unite_source_menu_menus.tabularize.command_candidates = [
 nnoremap <silent>[menu]t :Unite menu:tabularize<CR>
 " }}}
 
-if count(s:settings.plugin_groups, 'indents') "{{{
+if count(s:settings.plugin_groups, 'indents')
     NeoBundle 'nathanaelkane/vim-indent-guides' " A Vim plugin for visually displaying indent levels in code {{{
     let g:indent_guides_start_level=1
     let g:indent_guides_guide_size=1
@@ -1512,14 +1512,14 @@ if count(s:settings.plugin_groups, 'indents') "{{{
     "}}}
 endif "}}}
 
-if count(s:settings.plugin_groups, 'textobj') "{{{
+if count(s:settings.plugin_groups, 'textobj')
     NeoBundle 'kana/vim-textobj-user' " Vim plugin: Create your own text object
     NeoBundle 'kana/vim-textobj-indent' " Vim plugin: Text objects for indented blocks of lines
     NeoBundle 'kana/vim-textobj-entire' " Vim plugin: Text objects for entire buffer
     NeoBundle 'lucapette/vim-textobj-underscore' " Underscore text-object for Vim
 endif "}}}
 
-if count(s:settings.plugin_groups, 'misc') "{{{
+if count(s:settings.plugin_groups, 'misc')
     if exists('$TMUX')
         NeoBundle 'christoomey/vim-tmux-navigator' " Seamless navigation between tmux panes and vim splits
         let g:tmux_navigator_no_mappings = 1
@@ -2015,7 +2015,7 @@ autocmd FileType vim setlocal fdm=indent keywordprg=:help
 "}}}
 
 " color schemes {{{
-NeoBundle 'kenanpelit/seoul256.vim' "{{{
+NeoBundle 'kenanpelit/seoul256.vim'
 set background=dark
 let g:seoul256_background=235
 let s:settings.colorscheme = 'seoul256' "}}}
