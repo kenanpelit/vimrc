@@ -848,6 +848,10 @@ if count(s:settings.plugin_groups, 'unite')
     NeoBundleLazy 'lambdalisue/vim-gista', {'depends': ['Shougo/unite.vim', 'tyru/open-browser.vim'],
                 \ 'autoload': {'commands': ['Gista'], 'mappings': '<Plug>(gista-', 'unite_sources': 'gista'}}
     let g:gista#interactive_description = 1
+    NeoBundle 'tyru/open-browser.vim' " Open URI with your favorite browser from your most favorite editor
+    nmap gx <Plug>(openbrowser-search)
+    vmap gx <Plug>(openbrowser-search)
+    nmap gt <Plug>(openbrowser-open)
 endif
 
 " files and dirs menu
@@ -1878,7 +1882,7 @@ if exists(':terminal')
     " go into insert mode when entering the terminal
     autocmd BufWinEnter,WinEnter term://* startinsert
     autocmd BufLeave term://* stopinsert
-    autocmd WinEnter * vertical resize 80
+    "autocmd WinEnter * vertical resize 80
 endif
 
 " Text statistics
