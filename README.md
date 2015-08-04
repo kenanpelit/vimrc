@@ -113,19 +113,19 @@ The updated version is [here](https://github.com/kenanpelit/seoul256.vim).
 
 #### NeoBundle is a next generation Vim plugin manager.
 
-[vim-auto-save] Automatically save changes to disk in Vim
-[ctrlp-smarttabs]
-[ctrlp-py-matcher]
-[vim-bookmarks] Vim bookmark plugin
-[colorv.vim] A powerful color tool in vim
-[junkfile.vim]
-[neobundle.vim] Next generation Vim package manager
-[neocomplete.vim] Next generation completion framework after neocomplcache
-[neomru.vim]
-[neosnippet-snippets] The standard snippets repository for neosnippets
-[neosnippet.vim] neo-snippet plugin contains neocomplcache snippets source
-[unite-help]
-[unite-outline]
+[vim-auto-save] |  Automatically save changes to disk in Vim
+[ctrlp-smarttabs] | 
+[ctrlp-py-matcher] | 
+[vim-bookmarks] |  Vim bookmark plugin
+[colorv.vim] |  A powerful color tool in vim
+[junkfile.vim] | 
+[neobundle.vim] |  Next generation Vim package manager
+[neocomplete.vim] |  Next generation completion framework after neocomplcache
+[neomru.vim] | 
+[neosnippet-snippets] |  The standard snippets repository for neosnippets
+[neosnippet.vim] |  neo-snippet plugin contains neocomplcache snippets source
+[unite-help] | 
+[unite-outline] | 
 [unite-session]
 [unite.vim] Unite and create user interfaces
 [vimfiler.vim] Powerful file explorer implemented by Vim script
