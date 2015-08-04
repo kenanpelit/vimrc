@@ -849,6 +849,7 @@ if count(s:settings.plugin_groups, 'unite')
                 \ 'autoload': {'commands': ['Gista'], 'mappings': '<Plug>(gista-', 'unite_sources': 'gista'}}
     let g:gista#interactive_description = 1
     NeoBundle 'tyru/open-browser.vim' " Open URI with your favorite browser from your most favorite editor
+    nmap <leader>g <Plug>(openbrowser-search)
     nmap gx <Plug>(openbrowser-search)
     vmap gx <Plug>(openbrowser-search)
     nmap gt <Plug>(openbrowser-open)
