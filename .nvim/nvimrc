@@ -316,8 +316,8 @@ set ignorecase                                      "ignore case for searching
 set smartcase                                       "do case-sensitive if there's a capital letter
 
 " modifiable
-setlocal modifiable
 set modifiable
+setlocal modifiable
 
 " dict
 set dictionary+=n$HOME/.nvim/dict/tr-words
@@ -620,10 +620,10 @@ if count(s:settings.plugin_groups, 'navigation')
     let g:vimfiler_expand_jump_to_first_child=0
     let g:vimfiler_enable_auto_cd=1
     let g:vimfiler_ignore_pattern='\.'
+    let g:vimfiler_force_overwrite_statusline=0
     "let g:vimfiler_ignore_pattern='^\%(\.git\|\.hg\)$'
     "let g:vimfiler_sort_type = "Time"
     "let g:vimfiler_time_format = '%m-%d-%y %H:%M:%S'
-    "autocmd VimEnter * VimFiler
     "autocmd VimEnter * if !argc() | VimFiler | endif
     autocmd FileType vimfiler nmap q <buffer> <Plug>(vimfiler_close)
     autocmd FileType vimfiler nunmap <buffer> <C-l>
@@ -636,6 +636,7 @@ if count(s:settings.plugin_groups, 'navigation')
     autocmd FileType vimfiler nmap <silent><buffer><expr> <CR> vimfiler#smart_cursor_map("\<Plug>(vimfiler_expand_tree)", "\<Plug>(vimfiler_edit_file)")
     nnoremap <Leader>9 :<C-u>VimFiler -winwidth=55 -buffer-name=kenp -split -parent -winwidth=55 -toggle -no-quit<CR>
     nnoremap <Leader>8 :<C-u>VimFiler -winwidth=55 -buffer-name=kenp -split -parent -winwidth=55 -toggle -no-quit -find<CR>
+    NeoBundle 'Shougo/neossh.vim' " SSH interface for Vim plugins
     NeoBundle 'ryanoasis/vim-devicons' " vim web developer filetype font unicode icons for NERDTree and vim-airline
     let g:webdevicons_enable_unite = 1
     let g:webdevicons_enable_vimfiler = 1
@@ -1533,6 +1534,7 @@ if count(s:settings.plugin_groups, 'misc')
     NeoBundle 'asins/renamer.vim' " Use the power of vim to rename groups of files
     NeoBundle 'vim-scripts/LargeFile' " Edit large files quickly (keywords: large huge speed)
     NeoBundle 'vim-scripts/utl.vim' " Univeral Text Linking - Execute URLs, footnotes, open emails, organize ideas
+    "NeoBundle 'itchyny/vim-cursorword' " Underlines the word under the cursor
     NeoBundle 'myusuf3/numbers.vim' " numbers.vim is a vim plugin for better line numbers
     let g:numbers_exclude = ['unite', 'tagbar', 'vimfiler', 'startify', 'undotree', 'vimshell', 'vim-stardict']
     let g:enable_numbers = 0
@@ -1571,7 +1573,7 @@ if count(s:settings.plugin_groups, 'misc')
     let g:templates_directory='$HOME/.nvim/templates'
     NeoBundle 'luochen1990/rainbow' " rainbow parentheses improved, shorter code, no level limit, smooth and fast, powerful configuration
     let g:rainbow_active = 0 "0 if you want to enable it later via :RainbowToggle
-    nnoremap <leader>2 :RainbowToggle<CR>
+    "nnoremap <leader>2 :RainbowToggle<CR>
     let g:rainbow_conf = {
                 \   'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
                 \   'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
@@ -1801,6 +1803,32 @@ command! -bang Q q<bang>
 command! -bang QA qa<bang>
 command! -bang Qa qa<bang>
 
+" nvim terminal settings
+if exists(':terminal')
+    " allow terminal buffer size to be very large
+    let g:terminal_scrollback_buffer_size = 100000
+
+    " map esc to exit to normal mode in terminal too
+    tnoremap <Esc><Esc> <C-\><C-n>
+
+    " Jump and Create splits easily
+    tnoremap <A-h> <C-\><C-n><C-w>h
+    tnoremap <A-j> <C-\><C-n><C-w>j
+    tnoremap <A-k> <C-\><C-n><C-w>k
+    tnoremap <A-l> <C-\><C-n><C-w>l
+    tnoremap <A-c> <C-\><C-n><C-w>c
+    nnoremap <A-h> <C-w>h
+    nnoremap <A-j> <C-w>j
+    nnoremap <A-k> <C-w>k
+    nnoremap <A-l> <C-w>l
+    nnoremap <A-c> <C-w>c
+    nnoremap <leader>2 :vsp term://zsh<CR>
+
+    " go into insert mode when entering the terminal
+    autocmd BufWinEnter,WinEnter term://* startinsert
+    autocmd BufLeave term://* stopinsert
+endif
+
 " Text statistics
 " get the total of lines, words, chars and bytes (and for the current position)
 map <leader>em g<C-G>
@@ -1844,7 +1872,25 @@ autocmd FileType python setlocal foldmethod=indent
 autocmd FileType sh setlocal foldmethod=indent
 autocmd FileType markdown setlocal nolist
 autocmd FileType vim setlocal fdm=indent keywordprg=:help
+"autocmd VimEnter * wincmd p
 "au VimEnter * vnew
+
+"tagbar error for terminal
+let ret = ''
+if exists('*tagbar#currenttag')
+    let ret = tagbar#currenttag('%s', '')
+endif
+
+let ret = ''
+if exists('g:loaded_tagbar') && g:loaded_tagbar == 1
+    let ret = tagbar#currenttag('%s', '')
+endif
+
+try
+    let ret = tagbar#currenttag('%s', '')
+catch /.*/
+    let ret = ''
+endtry
 
 " color schemes
 NeoBundle 'kenanpelit/seoul256.vim'
