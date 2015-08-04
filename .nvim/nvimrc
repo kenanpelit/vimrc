@@ -524,9 +524,9 @@ if count(s:settings.plugin_groups, 'scm')
     nnoremap <localleader>gd :Gdiff<CR>
     nnoremap <localleader>gb :Gblame<CR>
     nnoremap <localleader>gB :Gbrowse<CR>
-    nnoremap <localleader>gp :Git push<CR>
-    nnoremap <localleader>gP :Git pull<CR>
-    nnoremap <localleader>gi :Git<Space>
+    nnoremap <localleader>gp :!git push<CR>
+    nnoremap <localleader>gP :!git pull<CR>
+    nnoremap <localleader>gi :!git<Space>
     nnoremap <localleader>ge :Gedit<CR>
     nnoremap <localleader>gE :Gedit<Space>
     nnoremap <localleader>gl :exe "silent Glog <Bar> Unite -no-quit quickfix"<CR>:redraw!<CR>
