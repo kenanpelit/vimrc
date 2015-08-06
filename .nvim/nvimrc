@@ -810,7 +810,8 @@ if count(s:settings.plugin_groups, 'unite')
     nnoremap [unite] <nop>
     nmap <localleader> [menu]
     nnoremap <silent>[menu]u :Unite -silent -winheight=12 menu<cr>
-    nnoremap <leader>nbu :Unite neobundle/update -vertical -no-start-insert<cr>
+    "nnoremap <leader>nbu :Unite neobundle/update -vertical -no-start-insert<cr>
+    nnoremap <leader>nbu :NeoBundleCheckUpdate<cr>
     nnoremap <silent> [unite]<space> :<C-u>Unite -toggle -auto-resize -buffer-name=mixed file_rec/async:! buffer file_mru bookmark<cr><c-u>
     nnoremap <silent> [unite]f :<C-u>Unite -toggle -auto-resize -buffer-name=files file_rec/async:!<cr><c-u>
     nnoremap <silent> [unite]e :<C-u>Unite -buffer-name=recent file_mru<cr>
@@ -1482,7 +1483,7 @@ if count(s:settings.plugin_groups, 'misc')
     endif
     NeoBundleLazy 'guns/xterm-color-table.vim', {'autoload':{'commands':'XtermColorTable'}} " All 256 xterm colors with their RGB equivalents, right in Vim!
     NeoBundle 'chrisbra/vim_faq' " The Vim FAQ from http://vimdoc.sourceforge.net/
-    NeoBundle 'vim-scripts/vimwiki' " Personal Wiki for Vim
+    "NeoBundle 'vim-scripts/vimwiki' " Personal Wiki for Vim
     NeoBundle 'idbrii/bufkill.vim' " Unload/delete/wipe a buffer, keep its window(s), display last accessed buffer(s)
     NeoBundle 'yssl/AutoCWD.vim' " Auto current working directory update system
     NeoBundle 'pbrisbin/vim-mkdir' " Automatically create any non-existent directories before writing the buffer.
@@ -1608,6 +1609,7 @@ if count(s:settings.plugin_groups, 'misc')
     let g:reload_on_write = 1
     NeoBundle 'fmoralesc/vim-pad' " a quick notetaking plugin
     let g:pad#dir="~/Documents/notes/"
+    let g:pad_default_file_extension = '.md'
     let g:pad#default_format = "vim-notes"
     let g:pad#search_backend = "ag"
     let g:pad#open_in_split=0
@@ -1615,10 +1617,11 @@ if count(s:settings.plugin_groups, 'misc')
     let g:pad#window_height=30
     let g:pad#window_width=50
     nmap <localleader>ll <Plug>(pad-list)
-    NeoBundle 'xolox/vim-notes' " Easy note taking in Vim
-    let g:notes_directories = ['~/Documents/notes']
-    let g:notes_suffix = 'md'
+    "NeoBundle 'xolox/vim-notes' " Easy note taking in Vim
+    "let g:notes_directories = ['~/Documents/notes']
+    "let g:notes_suffix = 'md'
     NeoBundle 'fmoralesc/vim-tutor-mode' " interactive tutorials for vim
+    NeoBundle 'shinnya/vim-mplayer' "a mplayer frontend for vim
     NeoBundle 'fmoralesc/vim-autogit' " autocommit changes to a file to an independent git repository
     let b:autogit_enabled=1
     NeoBundle 'mtth/scratch.vim' " Unobtrusive scratch window
@@ -1890,11 +1893,11 @@ endif
 " get the total of lines, words, chars and bytes (and for the current position)
 map <leader>em g<C-G>
 
-" <leader>ev edits .vimrc
+" <leader>ev edits .nvimrc
 nnoremap <leader>ev :vsplit ~/.nvim/vimrc<CR>
-" <leader>sv sources .vimrc
+" <leader>sv sources .nvimrc
 nnoremap <leader>sv :source $MYVIMRC<CR>:echo $MYVIMRC 'reloaded'<CR>
-"autocmd! BufWritePost vimrc source %
+"autocmd! BufWritePost nvimrc source %
 
 "Vim Scrolling Slowly - disabling parenthesis highlighting "
 let loaded_matchparen = 1
@@ -1929,6 +1932,9 @@ autocmd FileType python setlocal foldmethod=indent
 autocmd FileType sh setlocal foldmethod=indent
 autocmd FileType markdown setlocal nolist
 autocmd FileType vim setlocal fdm=indent keywordprg=:help
+autocmd BufRead,BufNewFile *.md setlocal textwidth=80
+" Allows writing to files with root priviledges
+cmap w!! w !sudo tee % > /dev/null
 "autocmd VimEnter * wincmd p
 "au VimEnter * vnew
 
