@@ -272,7 +272,6 @@ endif
 
 " Neovim specfic settings
 " Most of it stolen shamelessly from @tarruda
-
 autocmd FileType python
             \ let b:repler = executable('ipython') ? 'ipython -i %' : 'python -i %'
 autocmd FileType ruby
@@ -288,7 +287,6 @@ function! s:GetVisual()
     let lines = getline(lnum1, lnum2)
     let lines[-1] = lines[-1][:col2 - 2]
     let lines[0] = lines[0][col1 - 1:]
-
     return lines
 endfunction
 
@@ -299,7 +297,6 @@ endfunction
 function! REPLer(cmd)
     let command = substitute(a:cmd, '%:p', expand('%:p'), 'g')
     let command = substitute(command, '%', expand('%'), 'g')
-
     :vnew | call termopen(command) | startinsert
 endfunction
 
@@ -309,7 +306,6 @@ if has('nvim') && exists(':tnoremap')
         au TermOpen * let g:last_terminal_job_id = b:terminal_job_id
         au WinEnter term://* startinsert
     augroup END
-
     command! -range=% REPLSendSelection call REPLSend(s:GetVisual())
     command! REPLSendLine call REPLSend([getline('.')])
     command! REPLer call REPLer(b:repler)
@@ -374,16 +370,6 @@ setlocal modifiable
 set dictionary+=n$HOME/.nvim/dict/tr-words
 set viminfo+=n$HOME/.nvim/.cache/viminfo
 
-"if executable('ack')
-"    set grepprg=ack\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow\ $*
-"    set grepformat=%f:%l:%c:%m
-"endif
-
-"if executable('ag')
-"    set grepprg=ag\ --nogroup\ --column\ --smart-case\ --nocolor\ --follow
-"    set grepformat=%f:%l:%c:%m
-"endif
-
 " vim file/folder management
 " persistent undo
 if exists('+undofile')
@@ -417,8 +403,6 @@ set equalalways
 set shortmess+=I
 set showmatch                                       "automatically highlight matching braces/brackets/etc.
 set matchtime=2                                     "tens of a second to show matching parentheses
-"set number
-"set norelativenumber
 set lazyredraw
 set laststatus=2
 set noshowmode
@@ -449,10 +433,6 @@ if count(s:settings.plugin_groups, 'core')
     let g:airline_powerline_fonts=1
     let g:airline_theme='ubaryd'
     autocmd User Startified AirlineRefresh
-    "nmap <leader>2 <Plug>AirlineSelectTab2
-    "nmap <leader>3 <Plug>AirlineSelectTab3
-    "nmap <leader>4 <Plug>AirlineSelectTab4
-
     NeoBundle 'tpope/vim-surround' " surround.vim: quoting/parenthesizing made simple
     NeoBundle 'tpope/vim-repeat' " repeat.vim: enable repeating supported plugin maps with '.'
     NeoBundle 'tpope/vim-dispatch' " dispatch.vim: asynchronous build and test dispatcher
@@ -736,8 +716,6 @@ if count(s:settings.plugin_groups, 'ctrlp')
     let g:ctrlp_reuse_window='startify'
     let g:ctrlp_extensions = ['smarttabs', 'buffer', 'line', 'changes',
                 \'mixed', 'cmdpalette', 'funky', 'autoignore', 'mark']
-    set wildmode=list:longest,list:full
-    set wildignore+=*/tmp/*,*.o,*.obj,.git,*.rbc,*.mp3,*.flac,*.avi,*.svg,*.jpg,*.png,*.so,*.a,*.swp,*.zip,*.pyc,*.pyo,*.classh,__pycache__
     let g:ctrlp_custom_ignore = '\Trash\|\.git$\|\.hg$\|\.cache$\|\.svn$\|public\|\images\|
                 \ \public\|system\|data\|log\|\tmp$\|\.exe$\|\.so$\|\.dat$\|\Library\|\Download\|\.fonts\|
                 \ \Music\|\Movies\|Pictures\|undo\|chromium\|\.thunderbird\|\.pdf$\|\.epub$\|\.gitmodules$\|\.mobi$\|\.rar$\|\.png$\|
@@ -1553,7 +1531,7 @@ if count(s:settings.plugin_groups, 'misc')
     let g:CtrlSpaceLoadLastWorkspaceOnStart=0
     let g:CtrlSpaceSaveWorkspaceOnExit=0
     let g:CtrlSpaceSaveWorkspaceOnSwitch=0
-    let g:CtrlSpaceIgnoredFiles='\v(tmp|temp|dist|build)[\/]'
+    let g:CtrlSpaceIgnoredFiles='\v(tmp|temp|dist|build|Music)[\/]'
     let g:CtrlSpaceSearchTiming=500
     let g:CtrlSpaceFileEngine = "file_engine_linux_amd64"
     "let g:CtrlSpaceStatuslineFunction = "ctrlspace#api#Statusline()"
