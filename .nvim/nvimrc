@@ -873,8 +873,8 @@ nnoremap <silent>[menu]o :Unite -silent -winheight=17 -start-insert menu:files<C
 
 " file searching menu
 let g:unite_source_menu_menus.grep = {
-            \ 'description' : '           search files
-            \                             ⌘ [space]a',
+            \ 'description' : '          search files
+            \                            ⌘ [space]a',
             \}
 let g:unite_source_menu_menus.grep.command_candidates = [
             \['▷ search line                                                            ⌘ ',
@@ -902,8 +902,8 @@ nnoremap <silent>[menu]a :Unite -silent -winheight=12 -start-insert menu:grep<CR
 
 " buffers, tabs & windows menu
 let g:unite_source_menu_menus.navigation = {
-            \ 'description' : '           navigate by buffers, tabs & windows
-            \                             ⌘ [space]b',
+            \ 'description' : '          navigate by buffers, tabs & windows
+            \                            ⌘ [space]b',
             \}
 let g:unite_source_menu_menus.navigation.command_candidates = [
             \['▷ buffers                                                    ⌘ ,b',
@@ -1326,8 +1326,8 @@ function! GetColorMethod()
 endfunction
 
 let g:unite_source_menu_menus.colorv = {
-            \ 'description' : '        color management
-            \                          ⌘ [space]c',
+            \ 'description' : '          color management
+            \                            ⌘ [space]c',
             \}
 let g:unite_source_menu_menus.colorv.command_candidates = [
             \['▷ open colorv                                                ⌘ ,cv',
@@ -1364,8 +1364,8 @@ nnoremap <silent>[menu]c :Unite -silent menu:colorv<CR>
 
 " vim menu
 let g:unite_source_menu_menus.vim = {
-            \ 'description' : '            vim
-            \                              ⌘ [space]v',
+            \ 'description' : '          vim
+            \                            ⌘ [space]v',
             \}
 let g:unite_source_menu_menus.vim.command_candidates = [
             \['▷ choose colorscheme',
@@ -1396,8 +1396,8 @@ let g:unite_source_menu_menus.vim.command_candidates = [
 nnoremap <silent>[menu]v :Unite menu:vim -silent -start-insert<CR>
 
 let g:unite_source_menu_menus.tabularize = {
-            \ 'description' : '     tabularize
-            \                       ⌘ <Space>a',
+            \ 'description' : '          tabularize
+            \                            ⌘ <Space>a',
             \}
 let g:unite_source_menu_menus.tabularize.command_candidates = [
             \['▷ Tabularize &                                               ⌘ <Space>&',
@@ -1470,10 +1470,18 @@ if count(s:settings.plugin_groups, 'misc')
     "command! -bang -complete=buffer -nargs=? Bclose Bdelete<bang> <args>
     NeoBundle 'mhinz/vim-startify' " A fancy start screen for Vim
     let g:startify_session_dir=s:get_cache_dir('sessions')
+    let g:startify_enable_special=0
+    let g:startify_relative_path=1
+    let g:startify_change_to_dir=1
+    let g:startify_session_autoload=1
+    let g:startify_session_persistence=1
+    let g:startify_session_delete_buffers=1
     let g:startify_disable_at_vimenter=0
     let g:startify_change_to_vcs_root=1
     let g:startify_show_sessions=0
     let g:startify_restore_position=0
+    let g:startify_files_number=20
+    let g:startify_change_to_vcs_root=1
     let g:startify_custom_header=map(split(system('fortune'), '\n'), '"   ". v:val') + ['']
     let g:startify_list_order=[
                 \ ['=== Recent files:'], 'files',
@@ -1487,21 +1495,22 @@ if count(s:settings.plugin_groups, 'misc')
                 \ '~/Documents/tecmint',
                 \ '~/Documents/bash',
                 \ '~/Documents/tank/kenp/vimrc/.nvim/nvimrc',
-                \ '~/Documents/notes/vim/vimfiler.md',
+                \ '~/Documents/notes/vim/vimfiler',
                 \ '~/.zshrc',
                 \ ]
     let g:startify_skiplist = [
-                \ 'COMMIT_EDITMSG',
                 \ expand($NVIMRUNTIME) . '/doc',
                 \ expand($NVIMFILES) . 'bundle/.*/doc',
+                \ 'COMMIT_EDITMSG',
                 \ ]
-    let g:startify_files_number=20
-    let g:startify_relative_path=1
-    let g:startify_enable_special=0
-    let g:startify_change_to_dir=0
-    let g:startify_session_autoload=0
-    let g:startify_change_to_vcs_root=1
-    let g:startify_session_persistence=1
+    hi StartifyBracket ctermfg=240
+    hi StartifyFile ctermfg=147
+    hi StartifyFooter ctermfg=240
+    hi StartifyHeader ctermfg=114
+    hi StartifyNumber ctermfg=215
+    hi StartifyPath ctermfg=245
+    hi StartifySlash ctermfg=240
+    hi StartifySpecial ctermfg=240
     nnoremap <leader>7 :Startify<cr>
     NeoBundle 'scrooloose/syntastic' "Syntax checking hacks for vim
     let g:syntastic_error_symbol='✗'
@@ -1531,7 +1540,7 @@ if count(s:settings.plugin_groups, 'misc')
     let g:CtrlSpaceLoadLastWorkspaceOnStart=0
     let g:CtrlSpaceSaveWorkspaceOnExit=0
     let g:CtrlSpaceSaveWorkspaceOnSwitch=0
-    let g:CtrlSpaceIgnoredFiles='\v(tmp|temp|dist|build|Music)[\/]'
+    let g:CtrlSpaceIgnoredFiles='\v(tmp|temp|dist|build|music)[\/]'
     let g:CtrlSpaceSearchTiming=500
     let g:CtrlSpaceFileEngine = "file_engine_linux_amd64"
     "let g:CtrlSpaceStatuslineFunction = "ctrlspace#api#Statusline()"
@@ -1580,6 +1589,8 @@ if count(s:settings.plugin_groups, 'misc')
     "autocmd InsertEnter * :set number
     "autocmd InsertLeave * :set relativenumber
     NeoBundle 'fullybaked/toggle-numbers.vim' " Very simple Vim plugin to toggle between relative and absolute line numbers
+    "NeoBundle 'mtth/cursorcross.vim' " Sane cursorcolumn and cursorline handling
+    "let g:cursorcross_dynamic = 'clw'
     "NeoBundle 'dhruvasagar/vim-prosession', {'depends': 'tpope/vim-obsession'} "
     "let g:prosession_dir=s:get_cache_dir('sessions')
     "let g:loaded_prosession=0
@@ -1937,10 +1948,15 @@ catch /.*/
 endtry
 
 " color schemes
-NeoBundle 'kenanpelit/seoul256.vim'
+"NeoBundle 'kenanpelit/seoul256.vim'
+"set background=dark
+"let g:seoul256_background=236
+"let s:settings.colorscheme = 'seoul256'
+NeoBundle 'kenanpelit/vim-hybrid-material'
 set background=dark
-let g:seoul256_background=236
-let s:settings.colorscheme = 'seoul256'
+let g:enable_bold_font = 1
+"let s:settings.colorscheme = 'hybrid_reverse'
+let s:settings.colorscheme = 'hybrid_material'
 
 " finish loading
 if exists('g:dotvim_settings.disabled_plugins')
