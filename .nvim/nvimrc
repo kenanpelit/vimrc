@@ -16,9 +16,12 @@ let iCanHazNeoBundle=1
 let neobundle_readme=expand('~/.nvim/bundle/neobundle.vim/README.md')
 
 if !filereadable(neobundle_readme)
+    silent !mkdir -p ~/.nvim/bundle
+    echo "Installing Theme..."
+    echo ""
+    silent !git clone https://github.com/kenanpelit/vim-hybrid-material ~/.nvim/bundle/vim-hybrid-material/
     echo "Installing NeoBundle..."
     echo ""
-    silent !mkdir -p ~/.nvim/bundle
     silent !git clone https://github.com/Shougo/neobundle.vim ~/.nvim/bundle/neobundle.vim/
     let iCanHazNeoBundle=0
 endif
@@ -31,7 +34,7 @@ let s:settings.default_indent=4
 let s:settings.max_column=80
 let s:settings.enable_cursorcolumn=0
 let s:settings.autocomplete_method='ycm'
-let s:settings.colorscheme='seoul256'
+let s:settings.colorscheme='hybrid_material'
 
 if has('lua')
     let s:settings.autocomplete_method = 'neocomplete'
@@ -1490,10 +1493,6 @@ if count(s:settings.plugin_groups, 'misc')
                 \ ['=== Bookmarks:'], 'bookmarks',
                 \ ]
     let g:startify_bookmarks = [
-                \ '~/Documents/script',
-                \ '~/Documents/tank',
-                \ '~/Documents/tecmint',
-                \ '~/Documents/bash',
                 \ '~/Documents/tank/kenp/vimrc/.nvim/nvimrc',
                 \ '~/Documents/notes/vim/vimfiler',
                 \ '~/.zshrc',
@@ -1892,7 +1891,7 @@ nnoremap <leader>sv :source $MYVIMRC<CR>:echo $MYVIMRC 'reloaded'<CR>
 "autocmd! BufWritePost nvimrc source %
 
 "Vim Scrolling Slowly - disabling parenthesis highlighting "
-let loaded_matchparen = 1
+"let loaded_matchparen = 1
 
 " Toggle line numbers
 function! ToggleRelativeAbsoluteNumber()
@@ -1935,12 +1934,10 @@ let ret = ''
 if exists('*tagbar#currenttag')
     let ret = tagbar#currenttag('%s', '')
 endif
-
 let ret = ''
 if exists('g:loaded_tagbar') && g:loaded_tagbar == 1
     let ret = tagbar#currenttag('%s', '')
 endif
-
 try
     let ret = tagbar#currenttag('%s', '')
 catch /.*/
@@ -1955,7 +1952,6 @@ endtry
 NeoBundle 'kenanpelit/vim-hybrid-material'
 set background=dark
 let g:enable_bold_font = 1
-"let s:settings.colorscheme = 'hybrid_reverse'
 let s:settings.colorscheme = 'hybrid_material'
 
 " finish loading
@@ -1966,6 +1962,7 @@ if exists('g:dotvim_settings.disabled_plugins')
 endif
 
 call neobundle#end()
+
 filetype plugin indent on
 syntax enable
 exec 'colorscheme '.s:settings.colorscheme
