@@ -230,7 +230,7 @@ function! Preserve(command)
 endfunction
 nmap <leader>fef :call Preserve("normal gg=G")<cr>
 vmap <leader>feg :sort<cr>
-autocmd BufWritePre *.sh :normal gg=G
+"autocmd BufWritePre *.sh :normal gg=G
 "autocmd BufWritePre *.py :normal gg=G
 "autocmd BufWritePre * :normal gg=G
 
@@ -620,20 +620,20 @@ if count(s:settings.plugin_groups, 'navigation')
     nmap <leader>6 :call NERDComment(0, "toggle")<cr>
     vmap <leader>6 :call NERDComment(0, "toggle")<cr>")"
     NeoBundle 'rhysd/clever-f.vim' " Extended f, F, t and T key mappings for Vim
-    NeoBundle 'MattesGroeger/vim-bookmarks' " Vim bookmark plugin
-    let g:bookmark_sign='⚑'
-    let g:bookmark_highlight_lines=0
-    let g:bookmark_save_per_working_dir=0
-    let g:bookmark_manage_per_buffer=0
-    let g:bookmark_auto_close=1
-    let g:bookmark_auto_save=1
-    let g:bookmark_auto_save_file=s:get_cache_dir('bookmark')
-    let g:bookmark_center=1
-    let g:bookmark_no_default_key_mappings=0
-    highlight BookmarkSign ctermbg=NONE ctermfg=1
-    highlight BookmarkLine ctermbg=240 ctermfg=NONE
-    highlight BookmarkAnnotationSign ctermbg=NONE ctermfg=190
-    highlight BookmarkAnnotationLine ctermbg=23 ctermfg=NONE
+    "NeoBundle 'MattesGroeger/vim-bookmarks' " Vim bookmark plugin
+    "let g:bookmark_sign='⚑'
+    "let g:bookmark_highlight_lines=0
+    "let g:bookmark_save_per_working_dir=0
+    "let g:bookmark_manage_per_buffer=0
+    "let g:bookmark_auto_close=1
+    "let g:bookmark_auto_save=1
+    "let g:bookmark_auto_save_file=s:get_cache_dir('bookmark')
+    "let g:bookmark_center=1
+    "let g:bookmark_no_default_key_mappings=0
+    "highlight BookmarkSign ctermbg=NONE ctermfg=1
+    "highlight BookmarkLine ctermbg=240 ctermfg=NONE
+    "highlight BookmarkAnnotationSign ctermbg=NONE ctermfg=190
+    "highlight BookmarkAnnotationLine ctermbg=23 ctermfg=NONE
     NeoBundle 'majutsushi/tagbar', {'autoload':{'commands':'TagbarToggle'}} " Vim plugin that displays tags in a window, ordered by
     nnoremap <silent> <leader>4 :TagbarToggle<CR>
     NeoBundle 'easymotion/vim-easymotion' " Vim motions on speed!
@@ -650,7 +650,7 @@ if count(s:settings.plugin_groups, 'navigation')
     let g:vimfiler_tree_leaf_icon=" "
     let g:vimfiler_tree_closed_icon='▸'
     let g:vimfiler_tree_opened_icon='▾'
-    let g:vimfiler_file_icon='-'
+    let g:vimfiler_file_icon='⎈'
     let g:vimfiler_marked_file_icon='✓'
     let g:vimfiler_readonly_file_icon='⭤'
     let g:vimfiler_expand_jump_to_first_child=0
@@ -659,12 +659,12 @@ if count(s:settings.plugin_groups, 'navigation')
     let g:vimfiler_force_overwrite_statusline=0
     "let g:vimfiler_ignore_pattern='^\%(\.git\|\.hg\)$'
     "let g:vimfiler_sort_type = "Time"
-    "let g:vimfiler_time_format = '%m-%d-%y %H:%M:%S'
-    "autocmd VimEnter * if !argc() | VimFiler | endif
-    autocmd FileType vimfiler nmap q <buffer> <Plug>(vimfiler_close)
+    let g:vimfiler_time_format = '%m-%d-%y %H:%M:%S'
+    autocmd FileType vimfiler nmap <buffer> q <Plug>(vimfiler_close)
     autocmd FileType vimfiler nunmap <buffer> <C-l>
     autocmd FileType vimfiler nunmap <buffer> <C-j>
     autocmd FileType vimfiler nunmap <buffer> l
+    autocmd FileType vimfiler nmap <buffer> s <Plug>(vimfiler_sync_with_another_vimfiler)
     autocmd FileType vimfiler nmap <buffer> l <Plug>(vimfiler_cd_or_edit)
     autocmd FileType vimfiler nmap <buffer> h <Plug>(vimfiler_switch_to_parent_directory)
     autocmd FileType vimfiler nmap <buffer> <C-R> <Plug>(vimfiler_redraw_screen)
@@ -672,6 +672,11 @@ if count(s:settings.plugin_groups, 'navigation')
     autocmd FileType vimfiler nmap <silent><buffer><expr> <CR> vimfiler#smart_cursor_map("\<Plug>(vimfiler_expand_tree)", "\<Plug>(vimfiler_edit_file)")
     nnoremap <Leader>9 :<C-u>VimFiler -winwidth=55 -buffer-name=kenp -split -parent -winwidth=55 -toggle -no-quit<CR>
     nnoremap <Leader>8 :<C-u>VimFiler -winwidth=55 -buffer-name=kenp -split -parent -winwidth=55 -toggle -no-quit -find<CR>
+    highlight vimfilerNormalFile ctermfg=245 guifg=#808070
+    highlight vimfilerClosedFile ctermfg=249 guifg=#a8a897
+    highlight vimfilerOpenedFile ctermfg=254 guifg=#e8e8d3
+    highlight vimfilerNonMark ctermfg=239 guifg=#4e4e43
+    highlight vimfilerLeaf ctermfg=235 guifg=#30302c
     NeoBundle 'Shougo/neossh.vim' " SSH interface for Vim plugins
     NeoBundle 'ryanoasis/vim-devicons' " vim web developer filetype font unicode icons for NERDTree and vim-airline
     let g:webdevicons_enable_unite = 1
@@ -1047,19 +1052,19 @@ let g:unite_source_menu_menus.text.command_candidates = [
             \'exe "Loremipsum" input("number of words: ")'],
             \['▷ show current char info                                     ⌘ ga',
             \'normal ga'],
-            \['▷ multiple-cursors: next               (vim-multiple-cursors)            ⌘ <C-n>',
+            \['▷ multiple-cursors: next   (vim-multiple-cursors)            ⌘ <C-n>',
             \'normal <C-n>'],
-            \['▷ multiple-cursors: prev               (vim-multiple-cursors)            ⌘ <C-p>',
+            \['▷ multiple-cursors: prev   (vim-multiple-cursors)            ⌘ <C-p>',
             \'normal <C-p>'],
-            \['▷ multiple-cursors: skip               (vim-multiple-cursors)            ⌘ <C-x>',
+            \['▷ multiple-cursors: skip   (vim-multiple-cursors)            ⌘ <C-x>',
             \'normal <C-x>'],
-            \['▷ toggle surround in visualmode        (surround)                        ⌘ S',
+            \['▷ toggle surround in visualmode        (surround)            ⌘ S',
             \'visual S'],
-            \['▷ add surroundings in visualmode       (surround)                        ⌘ ys',
+            \['▷ add surroundings in visualmode       (surround)            ⌘ ys',
             \''],
-            \['▷ change surroundings in visualmode    (surround)                        ⌘ cs',
+            \['▷ change surroundings in visualmode    (surround)            ⌘ cs',
             \''],
-            \['▷ delete surroundings in visualmode    (surround)                        ⌘ ds',
+            \['▷ delete surroundings in visualmode    (surround)            ⌘ ds',
             \''],
             \]
 nnoremap <silent>[menu]e :Unite -silent -winheight=20 menu:text <CR>
@@ -1428,14 +1433,6 @@ if count(s:settings.plugin_groups, 'indents')
     let g:indent_guides_guide_size=1
     let g:indent_guides_enable_on_vim_startup=0
     let g:indent_guides_color_change_percent=3
-    if !has('gui_running')
-        let g:indent_guides_auto_colors=0
-        function! s:indent_set_console_colors()
-            hi IndentGuidesOdd ctermbg=235
-            hi IndentGuidesEven ctermbg=236
-        endfunction
-        autocmd VimEnter,Colorscheme * call s:indent_set_console_colors()
-    endif
 endif
 
 if count(s:settings.plugin_groups, 'textobj')
@@ -1620,7 +1617,7 @@ if count(s:settings.plugin_groups, 'misc')
     nmap <F2> :Scratch<CR>
     nmap <F3> :ScratchPreview<CR>
     NeoBundle 'aperezdc/vim-template' " Simple templates plugin for Vim
-    let g:templates_directory='$HOME/.nvim/templates'
+    "let g:templates_directory='$HOME/.nvim/templates'
     NeoBundle 'luochen1990/rainbow' " rainbow parentheses improved, shorter code, no level limit, smooth and fast, powerful configuration
     let g:rainbow_active = 0 "0 if you want to enable it later via :RainbowToggle
     "nnoremap <leader>2 :RainbowToggle<CR>
@@ -1887,7 +1884,7 @@ endif
 map <leader>em g<C-G>
 
 " <leader>ev edits .nvimrc
-nnoremap <leader>ev :vsplit ~/.nvim/vimrc<CR>
+nnoremap <leader>ev :vsplit ~/.nvim/nvimrc<CR>
 " <leader>sv sources .nvimrc
 nnoremap <leader>sv :source $MYVIMRC<CR>:echo $MYVIMRC 'reloaded'<CR>
 "autocmd! BufWritePost nvimrc source %
@@ -1927,9 +1924,10 @@ autocmd FileType markdown setlocal nolist
 autocmd FileType vim setlocal fdm=indent keywordprg=:help
 autocmd BufRead,BufNewFile *.md setlocal textwidth=80
 " Allows writing to files with root priviledges
+"autocmd VimEnter * VimFiler
+autocmd VimEnter * wincmd p
+"autocmd VimEnter * vnew
 cmap w!! w !sudo tee % > /dev/null
-"autocmd VimEnter * wincmd p
-"au VimEnter * vnew
 
 "tagbar error for terminal
 let ret = ''
