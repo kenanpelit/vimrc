@@ -18,10 +18,13 @@ let iCanHazNeoBundle=1
 let neobundle_readme=expand('~/.vim/bundle/neobundle.vim/README.md')
 
 if !filereadable(neobundle_readme)
+    silent !mkdir -p ~/.nvim/bundle
+    echo "Installing Theme..."
+    echo ""
+    silent !git clone https://github.com/kenanpelit/seoul256 ~/.nvim/bundle/seoul256/
     echo "Installing NeoBundle..."
     echo ""
-    silent !mkdir -p ~/.vim/bundle
-    silent !git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim/
+    silent !git clone https://github.com/Shougo/neobundle.vim ~/.nvim/bundle/neobundle.vim/
     let iCanHazNeoBundle=0
 endif
 
