@@ -562,6 +562,9 @@ if count(s:settings.plugin_groups, 'autocomplete')
         let g:neocomplete#enable_at_startup=1
         let g:neocomplete#data_directory=s:get_cache_dir('neocomplete')
     endif
+    NeoBundle 'Shougo/deoplete.nvim' " Dark powered asynchronous completion framework for neovim
+    let g:deoplete#enable_at_startup = 1
+    NeoBundle 'ervandew/supertab' " Perform all your vim insert mode completions with Tab
 endif
 
 if count(s:settings.plugin_groups, 'editing')
@@ -653,13 +656,13 @@ if count(s:settings.plugin_groups, 'navigation')
     let g:vimfiler_file_icon='⎈'
     let g:vimfiler_marked_file_icon='✓'
     let g:vimfiler_readonly_file_icon='⭤'
-    let g:vimfiler_expand_jump_to_first_child=0
+    let g:vimfiler_expand_jump_to_first_child=1
     let g:vimfiler_enable_auto_cd=1
-    let g:vimfiler_ignore_pattern='\.'
+    "let g:vimfiler_ignore_pattern='\.'
     let g:vimfiler_force_overwrite_statusline=0
     "let g:vimfiler_ignore_pattern='^\%(\.git\|\.hg\)$'
     "let g:vimfiler_sort_type = "Time"
-    let g:vimfiler_time_format = '%m-%d-%y %H:%M:%S'
+    "let g:vimfiler_time_format = '%m-%d-%y %H:%M:%S'
     autocmd FileType vimfiler nmap <buffer> q <Plug>(vimfiler_close)
     autocmd FileType vimfiler nunmap <buffer> <C-l>
     autocmd FileType vimfiler nunmap <buffer> <C-j>
@@ -671,7 +674,7 @@ if count(s:settings.plugin_groups, 'navigation')
     autocmd FileType vimfiler nmap <buffer> <Leader>sd <Plug>(vimfiler_mark_current_line):call VimfilerSearch()<CR>
     autocmd FileType vimfiler nmap <silent><buffer><expr> <CR> vimfiler#smart_cursor_map("\<Plug>(vimfiler_expand_tree)", "\<Plug>(vimfiler_edit_file)")
     nnoremap <Leader>9 :<C-u>VimFiler -buffer-name=kenp -split -parent -winwidth=55 -toggle -no-quit<CR>
-    nnoremap <Leader>8 :<C-u>VimFiler -find -buffer-name=kenp -split -parent -winwidth=55 -toggle -no-quit<CR>
+    nnoremap <Leader>8 :<C-u>VimFiler -buffer-name=kenp -split -parent -winwidth=55 -toggle -no-quit -find<CR>
     highlight vimfilerNormalFile ctermfg=245 guifg=#808070
     highlight vimfilerClosedFile ctermfg=249 guifg=#a8a897
     highlight vimfilerOpenedFile ctermfg=254 guifg=#e8e8d3
@@ -1926,7 +1929,7 @@ autocmd FileType vim setlocal fdm=indent keywordprg=:help
 autocmd BufRead,BufNewFile *.md setlocal textwidth=80
 " Allows writing to files with root priviledges
 "autocmd VimEnter * VimFiler
-autocmd VimEnter * wincmd p
+"autocmd VimEnter * wincmd p
 "autocmd VimEnter * vnew
 cmap w!! w !sudo tee % > /dev/null
 
