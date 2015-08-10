@@ -670,8 +670,8 @@ if count(s:settings.plugin_groups, 'navigation')
     autocmd FileType vimfiler nmap <buffer> <C-R> <Plug>(vimfiler_redraw_screen)
     autocmd FileType vimfiler nmap <buffer> <Leader>sd <Plug>(vimfiler_mark_current_line):call VimfilerSearch()<CR>
     autocmd FileType vimfiler nmap <silent><buffer><expr> <CR> vimfiler#smart_cursor_map("\<Plug>(vimfiler_expand_tree)", "\<Plug>(vimfiler_edit_file)")
-    nnoremap <Leader>9 :<C-u>VimFiler -winwidth=55 -buffer-name=kenp -split -parent -winwidth=55 -toggle -no-quit<CR>
-    nnoremap <Leader>8 :<C-u>VimFiler -winwidth=55 -buffer-name=kenp -split -parent -winwidth=55 -toggle -no-quit -find<CR>
+    nnoremap <Leader>9 :<C-u>VimFiler -buffer-name=kenp -split -parent -winwidth=55 -toggle -no-quit<CR>
+    nnoremap <Leader>8 :<C-u>VimFiler -find -buffer-name=kenp -split -parent -winwidth=55 -toggle -no-quit<CR>
     highlight vimfilerNormalFile ctermfg=245 guifg=#808070
     highlight vimfilerClosedFile ctermfg=249 guifg=#a8a897
     highlight vimfilerOpenedFile ctermfg=254 guifg=#e8e8d3
