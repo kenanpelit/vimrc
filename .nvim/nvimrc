@@ -322,7 +322,7 @@ set ttimeoutlen=50                                  "keycode timeout
 
 set mouse=                                          "disable mouse
 set mousehide                                       "hide when characters are typed
-set history=1000                                    "number of command lines to remember
+set history=10000                                   "number of command lines to remember
 set viewoptions=folds,options,cursor,unix,slash     "unix compatibility
 
 if exists('$TMUX')
@@ -1618,6 +1618,7 @@ if count(s:settings.plugin_groups, 'misc')
     nmap <F3> :ScratchPreview<CR>
     NeoBundle 'aperezdc/vim-template' " Simple templates plugin for Vim
     "let g:templates_directory='$HOME/.nvim/templates'
+    NeoBundle 'goldfeld/ctrlr.vim' " Ex command history reverse-i-search for Vim
     NeoBundle 'luochen1990/rainbow' " rainbow parentheses improved, shorter code, no level limit, smooth and fast, powerful configuration
     let g:rainbow_active = 0 "0 if you want to enable it later via :RainbowToggle
     "nnoremap <leader>2 :RainbowToggle<CR>
