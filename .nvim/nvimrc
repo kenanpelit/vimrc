@@ -451,17 +451,17 @@ if count(s:settings.plugin_groups, 'core')
 endif
 
 if count(s:settings.plugin_groups, 'web')
-    NeoBundle 'groenewege/vim-less', {'autoload':{'filetypes':['less']}} " vim syntax for LESS (dynamic CSS)
-    NeoBundle 'cakebaker/scss-syntax.vim', {'autoload':{'filetypes':['scss','sass']}} " Vim syntax file for scss (Sassy CSS)
-    NeoBundle 'hail2u/vim-css3-syntax', {'autoload':{'filetypes':['css','scss','sass']}} " Add CSS3 syntax support to vim's built-in `syntax/css.vim`.
-    NeoBundle 'ap/vim-css-color', {'autoload':{'filetypes':['css','scss','sass','less','styl']}} " Highlight colors in css files
-    NeoBundle 'othree/html5.vim', {'autoload':{'filetypes':['html']}} " HTML5 omnicomplete and syntax
-    NeoBundle 'wavded/vim-stylus', {'autoload':{'filetypes':['styl']}} " Syntax Highlighting for Stylus
-    NeoBundle 'digitaltoad/vim-jade', {'autoload':{'filetypes':['jade']}} " Vim Jade template engine syntax highlighting and indention
-    NeoBundle 'juvenn/mustache.vim', {'autoload':{'filetypes':['mustache']}} " Vim mode for mustache and handlebars (Deprecated)
-    NeoBundle 'gregsexton/MatchTag', {'autoload':{'filetypes':['html','xml']}} " Vim's MatchParen for HTML tags
-    NeoBundle 'mattn/emmet-vim', {'autoload':{'filetypes':['html','xml','xsl','xslt','xsd','css','sass','scss','less','mustache']}} " emmet for vim: http://emmet.io/
-    NeoBundle 'Rykka/colorv.vim', {'autoload' : {'commands' : [
+    NeoBundleLazy 'groenewege/vim-less', {'autoload':{'filetypes':['less']}} " vim syntax for LESS (dynamic CSS)
+    NeoBundleLazy 'cakebaker/scss-syntax.vim', {'autoload':{'filetypes':['scss','sass']}} " Vim syntax file for scss (Sassy CSS)
+    NeoBundleLazy 'hail2u/vim-css3-syntax', {'autoload':{'filetypes':['css','scss','sass']}} " Add CSS3 syntax support to vim's built-in `syntax/css.vim`.
+    NeoBundleLazy 'ap/vim-css-color', {'autoload':{'filetypes':['css','scss','sass','less','styl']}} " Highlight colors in css files
+    NeoBundleLazy 'othree/html5.vim', {'autoload':{'filetypes':['html']}} " HTML5 omnicomplete and syntax
+    NeoBundleLazy 'wavded/vim-stylus', {'autoload':{'filetypes':['styl']}} " Syntax Highlighting for Stylus
+    NeoBundleLazy 'digitaltoad/vim-jade', {'autoload':{'filetypes':['jade']}} " Vim Jade template engine syntax highlighting and indention
+    NeoBundleLazy 'juvenn/mustache.vim', {'autoload':{'filetypes':['mustache']}} " Vim mode for mustache and handlebars (Deprecated)
+    NeoBundleLazy 'gregsexton/MatchTag', {'autoload':{'filetypes':['html','xml']}} " Vim's MatchParen for HTML tags
+    NeoBundleLazy 'mattn/emmet-vim', {'autoload':{'filetypes':['html','xml','xsl','xslt','xsd','css','sass','scss','less','mustache']}} " emmet for vim: http://emmet.io/
+    NeoBundleLazy 'Rykka/colorv.vim', {'autoload' : {'commands' : [
                 \ 'ColorV', 'ColorVView', 'ColorVPreview',
                 \ 'ColorVPicker', 'ColorVEdit', 'ColorVEditAll',
                 \ 'ColorVInsert', 'ColorVList', 'ColorVName',
@@ -558,14 +558,14 @@ if count(s:settings.plugin_groups, 'autocomplete')
         smap <expr><S-TAB> pumvisible() ? "\<C-p>" : ""
     endif
     if s:settings.autocomplete_method == 'neocomplete'
-        NeoBundle 'Shougo/neocomplete.vim', {'autoload':{'insert':1}, 'vim_version':'7.3.885'} " Next generation completion framework after neocomplcache
+        NeoBundleLazy 'Shougo/neocomplete.vim', {'autoload':{'insert':1}, 'vim_version':'7.3.885'} " Next generation completion framework after neocomplcache
         let g:neocomplete#enable_at_startup=1
         let g:neocomplete#data_directory=s:get_cache_dir('neocomplete')
     endif
 endif
 
 if count(s:settings.plugin_groups, 'editing')
-    NeoBundle 'editorconfig/editorconfig-vim', {'autoload':{'insert':1}} " EditorConfig plugin for Vim
+    NeoBundleLazy 'editorconfig/editorconfig-vim', {'autoload':{'insert':1}} " EditorConfig plugin for Vim
     NeoBundle 'tpope/vim-endwise' " endwise.vim: wisely add 'end' in ruby, endfunction/endif/more in vim script, etc
     NeoBundle 'tpope/vim-speeddating' " speeddating.vim: use CTRL-A/CTRL-X to increment dates, times, and more
     NeoBundle 'thinca/vim-visualstar' " star for Visual-mode
@@ -604,11 +604,11 @@ if count(s:settings.plugin_groups, 'navigation')
     NeoBundle 'rking/ag.vim' "Vim plugin for the_silver_searcher, 'ag', a replacement for the Perl module / CLI script 'ack'
     set runtimepath^=~/.nvim/bundle/ag
     let g:ackprg = "ag --nogroup --column --smart-case --follow"
-    NeoBundle 'mbbill/undotree', {'autoload':{'commands':'UndotreeToggle'}} " The ultimate undo history visualizer for VIM
+    NeoBundleLazy 'mbbill/undotree', {'autoload':{'commands':'UndotreeToggle'}} " The ultimate undo history visualizer for VIM
     let g:undotree_WindowLayout=3
     let g:undotree_SetFocusWhenToggle=1
     nnoremap <silent> <leader>5 :UndotreeToggle<CR>
-    NeoBundle 'vim-scripts/EasyGrep', {'autoload':{'commands':'GrepOptions'}} " Fast and Easy Find and Replace Across Multiple Files
+    NeoBundleLazy 'vim-scripts/EasyGrep', {'autoload':{'commands':'GrepOptions'}} " Fast and Easy Find and Replace Across Multiple Files
     let g:EasyGrepRecursive=1
     let g:EasyGrepAllOptionsInExplorer=1
     let g:EasyGrepCommand=1
@@ -634,7 +634,7 @@ if count(s:settings.plugin_groups, 'navigation')
     "highlight BookmarkLine ctermbg=240 ctermfg=NONE
     "highlight BookmarkAnnotationSign ctermbg=NONE ctermfg=190
     "highlight BookmarkAnnotationLine ctermbg=23 ctermfg=NONE
-    NeoBundle 'majutsushi/tagbar', {'autoload':{'commands':'TagbarToggle'}} " Vim plugin that displays tags in a window, ordered by
+    NeoBundleLazy 'majutsushi/tagbar', {'autoload':{'commands':'TagbarToggle'}} " Vim plugin that displays tags in a window, ordered by
     nnoremap <silent> <leader>4 :TagbarToggle<CR>
     NeoBundle 'easymotion/vim-easymotion' " Vim motions on speed!
     let g:EasyMotion_do_mapping = 0
@@ -812,29 +812,29 @@ if count(s:settings.plugin_groups, 'unite')
     nnoremap <silent> [unite]bm :<C-u>Unite -silent -auto-resize -buffer-name=my-directories -default-action=vimfiler bookmark<CR>
     nnoremap <silent> [unite]p :<C-u>UniteWithInputDirectory -toggle -auto-resize -buffer-name=files file_rec/async:!<cr><c-u>
     "nnoremap <silent> [unite]p :<C-u>Unite file_rec/async<cr>
-    NeoBundle 'Shougo/neomru.vim', {'autoload':{'unite_sources':'file_mru'}}
-    NeoBundle 'osyo-manga/unite-airline_themes', {'autoload':{'unite_sources':'airline_themes'}}
+    NeoBundleLazy 'Shougo/neomru.vim', {'autoload':{'unite_sources':'file_mru'}}
+    NeoBundleLazy 'osyo-manga/unite-airline_themes', {'autoload':{'unite_sources':'airline_themes'}}
     nnoremap <silent> [unite]a :<C-u>Unite -winheight=10 -auto-preview -buffer-name=airline_themes airline_themes<cr>
-    NeoBundle 'ujihisa/unite-colorscheme', {'autoload':{'unite_sources':'colorscheme'}}
+    NeoBundleLazy 'ujihisa/unite-colorscheme', {'autoload':{'unite_sources':'colorscheme'}}
     nnoremap <silent> [unite]c :<C-u>Unite -winheight=10 -auto-preview -buffer-name=colorschemes colorscheme<cr>
-    NeoBundle 'tsukkee/unite-tag', {'autoload':{'unite_sources':['tag','tag/file']}}
+    NeoBundleLazy 'tsukkee/unite-tag', {'autoload':{'unite_sources':['tag','tag/file']}}
     nnoremap <silent> [unite]t :<C-u>Unite -auto-resize -buffer-name=tag tag tag/file<cr>
     nnoremap <silent> [unite]u :<C-u>Unite -silent -vertical -winwidth=40 -direction=topleft -toggle outline<cr>
-    NeoBundle 'Shougo/unite-outline', {'autoload':{'unite_sources':'outline'}}
+    NeoBundleLazy 'Shougo/unite-outline', {'autoload':{'unite_sources':'outline'}}
     nnoremap <silent> [unite]o :<C-u>Unite -auto-resize -buffer-name=outline outline<cr>
-    NeoBundle 'Shougo/unite-help', {'autoload':{'unite_sources':'help'}}
+    NeoBundleLazy 'Shougo/unite-help', {'autoload':{'unite_sources':'help'}}
     nnoremap <silent> [unite]h :<C-u>Unite -auto-resize -buffer-name=help help<cr>
-    NeoBundle 'Shougo/junkfile.vim', {'autoload':{'commands':'JunkfileOpen','unite_sources':['junkfile','junkfile/new']}}
+    NeoBundleLazy 'Shougo/junkfile.vim', {'autoload':{'commands':'JunkfileOpen','unite_sources':['junkfile','junkfile/new']}}
     let g:junkfile#directory=s:get_cache_dir('junk')
     nnoremap <silent> [unite]j :<C-u>Unite -auto-resize -buffer-name=junk junkfile junkfile/new<cr>
-    NeoBundle 'Shougo/unite-session', {'autoload':{'unite_sources':'session', 'commands': ['UniteSessionSave', 'UniteSessionLoad']}}
-    NeoBundle 'osyo-manga/unite-quickfix', {'autoload':{'unite_sources': ['quickfix', 'location_list']}}
-    NeoBundle 'thinca/vim-unite-history', { 'autoload' : { 'unite_sources' : ['history/command', 'history/search']}}
-    NeoBundle 'ujihisa/unite-colorscheme', {'autoload':{'unite_sources': 'colorscheme'}}
-    NeoBundle 'osyo-manga/unite-filetype', {'autoload':{'unite_sources': 'filetype'}}
-    NeoBundle 'ujihisa/unite-locate', {'autoload':{'unite_sources':'locate'}}
-    NeoBundle 'klen/unite-radio.vim', {'autoload':{'unite_sources':'radio'}}
-    NeoBundle 'lambdalisue/vim-gista', {'depends': ['Shougo/unite.vim', 'tyru/open-browser.vim'],
+    NeoBundleLazy 'Shougo/unite-session', {'autoload':{'unite_sources':'session', 'commands': ['UniteSessionSave', 'UniteSessionLoad']}}
+    NeoBundleLazy 'osyo-manga/unite-quickfix', {'autoload':{'unite_sources': ['quickfix', 'location_list']}}
+    NeoBundleLazy 'thinca/vim-unite-history', { 'autoload' : { 'unite_sources' : ['history/command', 'history/search']}}
+    NeoBundleLazy 'ujihisa/unite-colorscheme', {'autoload':{'unite_sources': 'colorscheme'}}
+    NeoBundleLazy 'osyo-manga/unite-filetype', {'autoload':{'unite_sources': 'filetype'}}
+    NeoBundleLazy 'ujihisa/unite-locate', {'autoload':{'unite_sources':'locate'}}
+    NeoBundleLazy 'klen/unite-radio.vim', {'autoload':{'unite_sources':'radio'}}
+    NeoBundleLazy 'lambdalisue/vim-gista', {'depends': ['Shougo/unite.vim', 'tyru/open-browser.vim'],
                 \ 'autoload': {'commands': ['Gista'], 'mappings': '<Plug>(gista-', 'unite_sources': 'gista'}}
     let g:gista#interactive_description = 1
     NeoBundle 'tyru/open-browser.vim' " Open URI with your favorite browser from your most favorite editor
@@ -1444,7 +1444,7 @@ endif
 
 if count(s:settings.plugin_groups, 'misc')
     if exists('$TMUX')
-        NeoBundle 'christoomey/vim-tmux-navigator' " Seamless navigation between tmux panes and vim splits
+        NeoBundleLazy 'christoomey/vim-tmux-navigator' " Seamless navigation between tmux panes and vim splits
         let g:tmux_navigator_no_mappings = 1
         nnoremap <silent> {Left-mapping} :TmuxNavigateLeft<cr>
         nnoremap <silent> {Down-Mapping} :TmuxNavigateDown<cr>
@@ -1456,10 +1456,10 @@ if count(s:settings.plugin_groups, 'misc')
         NeoBundle 'tmux-plugins/vim-tmux', { 'autoload' : { 'filetypes' : 'conf'}} " vim plugin for tmux.conf
     endif
     NeoBundle 'kana/vim-vspec' " Vim plugin: Testing framework for Vim script
-    NeoBundle 'tpope/vim-scriptease', {'autoload':{'filetypes':['vim']}} " scriptease.vim: A Vim plugin for Vim plugins
-    NeoBundle 'tpope/vim-markdown', {'autoload':{'filetypes':['markdown']}} " Vim Markdown runtime files
+    NeoBundleLazy 'tpope/vim-scriptease', {'autoload':{'filetypes':['vim']}} " scriptease.vim: A Vim plugin for Vim plugins
+    NeoBundleLazy 'tpope/vim-markdown', {'autoload':{'filetypes':['markdown']}} " Vim Markdown runtime files
     if executable('redcarpet') && executable('instant-markdown-d')
-        NeoBundle 'suan/vim-instant-markdown', {'autoload':{'filetypes':['markdown']}} " Instant Markdown previews from VIm!
+        NeoBundleLazy 'suan/vim-instant-markdown', {'autoload':{'filetypes':['markdown']}} " Instant Markdown previews from VIm!
     endif
     NeoBundle 'guns/xterm-color-table.vim', {'autoload':{'commands':'XtermColorTable'}} " All 256 xterm colors with their RGB equivalents, right in Vim!
     NeoBundle 'chrisbra/vim_faq' " The Vim FAQ from http://vimdoc.sourceforge.net/
@@ -1549,10 +1549,10 @@ if count(s:settings.plugin_groups, 'misc')
     "hi link CtrlSpaceSelected PMenuSel
     "hi link CtrlSpaceSearch Search
     "hi link CtrlSpaceStatus StatusLine
-    NeoBundle 'mattn/gist-vim', { 'depends': 'mattn/webapi-vim', 'autoload': { 'commands': 'Gist' }} " vimscript for gist
+    NeoBundleLazy 'mattn/gist-vim', { 'depends': 'mattn/webapi-vim', 'autoload': { 'commands': 'Gist' }} " vimscript for gist
     let g:gist_post_private=1
     let g:gist_show_privates=1
-    NeoBundle 'Shougo/vimshell.vim', {'autoload':{'commands':[ 'VimShell', 'VimShellInteractive' ]}} " Powerful shell implemented by vim
+    NeoBundleLazy 'Shougo/vimshell.vim', {'autoload':{'commands':[ 'VimShell', 'VimShellInteractive' ]}} " Powerful shell implemented by vim
     let g:vimshell_editor_command='vim'
     let g:vimshell_right_prompt='getcwd()'
     let g:vimshell_data_directory=s:get_cache_dir('vimshell')
@@ -1566,7 +1566,7 @@ if count(s:settings.plugin_groups, 'misc')
     NeoBundle 'ntpeters/vim-better-whitespace' " Better whitespace highlighting for Vim
     highlight ExtraWhitespace ctermbg=yellow
     nnoremap <silent> <leader>0 :StripWhitespace<CR>
-    NeoBundle 'zhaocai/GoldenView.Vim', {'autoload':{'mappings':['<Plug>ToggleGoldenViewAutoResize']}} " Always have a nice view for vim split windows!
+    NeoBundleLazy 'zhaocai/GoldenView.Vim', {'autoload':{'mappings':['<Plug>ToggleGoldenViewAutoResize']}} " Always have a nice view for vim split windows!
     let g:goldenview_enable_at_startup=0
     let g:goldenview__enable_default_mapping=0
     nmap <F4> <Plug>ToggleGoldenViewAutoResize
