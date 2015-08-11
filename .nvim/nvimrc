@@ -562,7 +562,6 @@ if count(s:settings.plugin_groups, 'autocomplete')
         let g:neocomplete#enable_at_startup=1
         let g:neocomplete#data_directory=s:get_cache_dir('neocomplete')
     endif
-    NeoBundle 'Shougo/deoplete.nvim' " Dark powered asynchronous completion framework for neovim
     let g:deoplete#enable_at_startup = 1
     NeoBundle 'ervandew/supertab' " Perform all your vim insert mode completions with Tab
 endif
