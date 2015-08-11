@@ -216,24 +216,6 @@ function! LinesOfCode()
     echo system('cloc --quiet '.bufname("%"))
 endfunction
 
-" formatting shortcuts
-function! Preserve(command)
-    " preparation: save last search, and cursor position.
-    let _s=@/
-    let l=line(".")
-    let c=col(".")
-    " do the business:
-    execute a:command
-    " clean up: restore previous search history, and cursor position
-    let @/=_s
-    call cursor(l, c)
-endfunction
-nmap <leader>fef :call Preserve("normal gg=G")<cr>
-vmap <leader>feg :sort<cr>
-"autocmd BufWritePre *.sh :normal gg=G
-"autocmd BufWritePre *.py :normal gg=G
-"autocmd BufWritePre * :normal gg=G
-
 "Toggle cursorline and cursorcolumn function in VIM
 fu! ToggleCurline ()
     if &cursorline && &cursorcolumn
@@ -596,6 +578,10 @@ if count(s:settings.plugin_groups, 'editing')
     let g:multi_cursor_start_key='<F5>'
     let g:multi_cursor_start_key='<C-n>'
     let g:multi_cursor_start_word_key='g<C-n>'
+    NeoBundle 'Chiel92/vim-autoformat' " Provide easy code formatting in Vim by integrating existing code formatters.
+    noremap <F3> :Autoformat<CR>
+    let g:formatdef_autopep8 = "'autopep8 - --range '.a:firstline.' '.a:lastline"
+    let g:formatters_python = ['autopep8']
 endif
 
 if count(s:settings.plugin_groups, 'navigation')
@@ -1617,7 +1603,7 @@ if count(s:settings.plugin_groups, 'misc')
     NeoBundle 'mtth/scratch.vim' " Unobtrusive scratch window
     let g:scratch_insert_autohide=1
     nmap <F2> :Scratch<CR>
-    nmap <F3> :ScratchPreview<CR>
+    "nmap <F3> :ScratchPreview<CR>
     NeoBundle 'aperezdc/vim-template' " Simple templates plugin for Vim
     "let g:templates_directory='$HOME/.nvim/templates'
     NeoBundle 'goldfeld/ctrlr.vim' " Ex command history reverse-i-search for Vim
@@ -1730,6 +1716,8 @@ nnoremap <left> :bprev<CR>
 nnoremap <right> :bnext<CR>
 nnoremap <up> :tabnext<CR>
 nnoremap <down> :tabprev<CR>
+nnoremap <silent> <s-l> :bnext<cr>
+nnoremap <silent> <s-h> :bprev<cr>
 
 " smash escape
 inoremap jk <esc>
@@ -1892,6 +1880,8 @@ nnoremap <leader>ev :vsplit ~/.nvim/nvimrc<CR>
 nnoremap <leader>sv :source $MYVIMRC<CR>:echo $MYVIMRC 'reloaded'<CR>
 "autocmd! BufWritePost nvimrc source %
 
+vmap <leader>feg :sort<cr>
+
 "Vim Scrolling Slowly - disabling parenthesis highlighting "
 "let loaded_matchparen = 1
 
@@ -1926,10 +1916,17 @@ autocmd FileType sh setlocal foldmethod=indent
 autocmd FileType markdown setlocal nolist
 autocmd FileType vim setlocal fdm=indent keywordprg=:help
 autocmd BufRead,BufNewFile *.md setlocal textwidth=80
+
 " Allows writing to files with root priviledges
 "autocmd VimEnter * VimFiler
 "autocmd VimEnter * wincmd p
 "autocmd VimEnter * vnew
+"autocmd BufWrite * :Autoformat
+"autocmd BufWritePre *.sh :normal gg=G
+"autocmd BufWritePre *.py :normal gg=G
+"autocmd BufWritePre * :normal gg=G
+
+" Sudo edit
 cmap w!! w !sudo tee % > /dev/null
 
 "tagbar error for terminal
