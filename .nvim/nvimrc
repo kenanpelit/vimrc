@@ -17,9 +17,9 @@ let neobundle_readme=expand('~/.nvim/bundle/neobundle.vim/README.md')
 
 if !filereadable(neobundle_readme)
     silent !mkdir -p ~/.nvim/bundle
-    echo "Installing Theme..."
+    echo "Installing Theme Molokai..."
     echo ""
-    silent !git clone https://github.com/kenanpelit/vim-hybrid-material ~/.nvim/bundle/vim-hybrid-material/
+    silent !git clone https://github.com/kenanpelit/molokai ~/.nvim/bundle/molokai/
     echo "Installing NeoBundle..."
     echo ""
     echo "Just sit back and relax. It will take about ten minutes..."
@@ -36,7 +36,7 @@ let s:settings.default_indent=4
 let s:settings.max_column=80
 let s:settings.enable_cursorcolumn=0
 let s:settings.autocomplete_method='ycm'
-let s:settings.colorscheme='hybrid_material'
+let s:settings.colorscheme='molokai'
 
 if has('lua')
     let s:settings.autocomplete_method = 'neocomplete'
@@ -1944,17 +1944,13 @@ catch /.*/
     let ret = ''
 endtry
 
-" color schemes
-"NeoBundle 'kenanpelit/seoul256.vim'
-"set background=dark
-"let g:seoul256_background=236
-"let s:settings.colorscheme = 'seoul256'
-NeoBundle 'kenanpelit/vim-hybrid-material'
-set background=dark
-let g:enable_bold_font = 1
-let s:settings.colorscheme = 'hybrid_material'
+" Color schemes
+NeoBundle 'kenanpelit/molokai' " Molokai color scheme for Vim
+"let g:molokai_original = 1
+let g:rehash256 = 1
+let s:settings.colorscheme = 'molokai'
 
-" finish loading
+" Finish loading
 if exists('g:dotvim_settings.disabled_plugins')
     for plugin in g:dotvim_settings.disabled_plugins
         exec 'NeoBundleDisable '.plugin
