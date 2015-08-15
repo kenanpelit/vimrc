@@ -803,7 +803,7 @@ if count(s:settings.plugin_groups, 'unite')
     nnoremap <silent> [unite]bm :<C-u>Unite -silent -auto-resize -buffer-name=my-directories -default-action=vimfiler bookmark<CR>
     nnoremap <silent> [unite]p :<C-u>UniteWithInputDirectory -toggle -auto-resize -buffer-name=files file_rec/async:!<cr><c-u>
     "nnoremap <silent> [unite]p :<C-u>Unite file_rec/async<cr>
-    NeoBundleLazy 'Shougo/neomru.vim', {'autoload':{'unite_sources':'file_mru'}}
+    NeoBundle 'Shougo/neomru.vim'
     NeoBundleLazy 'osyo-manga/unite-airline_themes', {'autoload':{'unite_sources':'airline_themes'}}
     nnoremap <silent> [unite]a :<C-u>Unite -winheight=10 -auto-preview -buffer-name=airline_themes airline_themes<cr>
     NeoBundleLazy 'ujihisa/unite-colorscheme', {'autoload':{'unite_sources':'colorscheme'}}
@@ -1541,17 +1541,6 @@ if count(s:settings.plugin_groups, 'misc')
     NeoBundleLazy 'mattn/gist-vim', { 'depends': 'mattn/webapi-vim', 'autoload': { 'commands': 'Gist' }} " vimscript for gist
     let g:gist_post_private=1
     let g:gist_show_privates=1
-    NeoBundleLazy 'Shougo/vimshell.vim', {'autoload':{'commands':[ 'VimShell', 'VimShellInteractive' ]}} " Powerful shell implemented by vim
-    let g:vimshell_editor_command='vim'
-    let g:vimshell_right_prompt='getcwd()'
-    let g:vimshell_data_directory=s:get_cache_dir('vimshell')
-    let g:vimshell_vimshrc_path='~/.nvim/vimshrc'
-    let g:vimshell_prompt='❯ '
-    let g:vimshell_enable_transient_user_prompt=1
-    let g:vimshell_external_history_path=expand('~/.zsh-history')
-    nnoremap <leader>c :VimShell -split<cr>
-    nnoremap <leader>cv :VimShellPop<cr>
-    nnoremap <leader>cp :VimShellInteractive python<cr>
     NeoBundle 'ntpeters/vim-better-whitespace' " Better whitespace highlighting for Vim
     highlight ExtraWhitespace ctermbg=yellow
     nnoremap <silent> <leader>0 :StripWhitespace<CR>
@@ -1568,7 +1557,7 @@ if count(s:settings.plugin_groups, 'misc')
     NeoBundle 'vim-scripts/utl.vim' " Univeral Text Linking - Execute URLs, footnotes, open emails, organize ideas
     "NeoBundle 'itchyny/vim-cursorword' " Underlines the word under the cursor
     NeoBundle 'myusuf3/numbers.vim' " numbers.vim is a vim plugin for better line numbers
-    let g:numbers_exclude = ['unite', 'tagbar', 'vimfiler', 'startify', 'undotree', 'vimshell', 'vim-stardict']
+    let g:numbers_exclude = ['unite', 'tagbar', 'vimfiler', 'startify', 'undotree', 'vim-stardict']
     let g:enable_numbers = 0
     "nnoremap <silent> <leader>3 :NumbersToggle<CR>
     "autocmd FocusLost * :set number
@@ -1748,6 +1737,7 @@ vnoremap / /\v
 nnoremap ? ?\v
 vnoremap ? ?\v
 nnoremap :s/ :s/\v
+"%s/\r//g
 
 " command-line window
 nnoremap q: q:i
@@ -1931,19 +1921,19 @@ autocmd BufRead,BufNewFile *.md setlocal textwidth=80
 cmap w!! w !sudo tee % > /dev/null
 
 "tagbar error for terminal
-let ret = ''
-if exists('*tagbar#currenttag')
-    let ret = tagbar#currenttag('%s', '')
-endif
-let ret = ''
-if exists('g:loaded_tagbar') && g:loaded_tagbar == 1
-    let ret = tagbar#currenttag('%s', '')
-endif
-try
-    let ret = tagbar#currenttag('%s', '')
-catch /.*/
-    let ret = ''
-endtry
+"let ret = ''
+"if exists('*tagbar#currenttag')
+"    let ret = tagbar#currenttag('%s', '')
+"endif
+"let ret = ''
+"if exists('g:loaded_tagbar') && g:loaded_tagbar == 1
+"    let ret = tagbar#currenttag('%s', '')
+"endif
+"try
+"    let ret = tagbar#currenttag('%s', '')
+"catch /.*/
+"    let ret = ''
+"endtry
 
 " Color schemes
 NeoBundle 'kenanpelit/molokai' " Molokai color scheme for Vim
