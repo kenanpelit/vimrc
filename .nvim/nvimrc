@@ -251,6 +251,31 @@ function! CloseWindowOrKillBuffer()
 endfunction
 nnoremap <silent> Q :call CloseWindowOrKillBuffer()<cr>
 
+" Unite Escape
+function! s:EscapeUnite()
+    augroup CloseUniteBuffer
+        autocmd!
+        autocmd InsertEnter <buffer>
+                    \ let b:close = 0 |
+                    \ let g:udt = &updatetime |
+                    \ set updatetime=3
+
+        autocmd InsertLeave <buffer>
+                    \ let b:close = 1
+
+        autocmd BufLeave,CursorHold <buffer>
+                    \ let &updatetime = g:udt |
+                    \ unlet g:udt
+
+        autocmd CursorHold <buffer>
+                    \ if b:close | close | endif
+    augroup END
+endfunction
+augroup EscapeUnite
+    autocmd!
+    autocmd FileType unite call s:EscapeUnite()
+augroup END
+
 "Neobundle Vimproc
 let g:make = 'gmake'
 if system('uname -o') =~ '^GNU/'
@@ -1921,19 +1946,19 @@ autocmd BufRead,BufNewFile *.md setlocal textwidth=80
 cmap w!! w !sudo tee % > /dev/null
 
 "tagbar error for terminal
-"let ret = ''
-"if exists('*tagbar#currenttag')
-"    let ret = tagbar#currenttag('%s', '')
-"endif
-"let ret = ''
-"if exists('g:loaded_tagbar') && g:loaded_tagbar == 1
-"    let ret = tagbar#currenttag('%s', '')
-"endif
-"try
-"    let ret = tagbar#currenttag('%s', '')
-"catch /.*/
-"    let ret = ''
-"endtry
+let ret = ''
+if exists('*tagbar#currenttag')
+    let ret = tagbar#currenttag('%s', '')
+endif
+let ret = ''
+if exists('g:loaded_tagbar') && g:loaded_tagbar == 1
+    let ret = tagbar#currenttag('%s', '')
+endif
+try
+    let ret = tagbar#currenttag('%s', '')
+catch /.*/
+    let ret = ''
+endtry
 
 " Color schemes
 NeoBundle 'kenanpelit/molokai' " Molokai color scheme for Vim
