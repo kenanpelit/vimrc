@@ -1497,7 +1497,7 @@ if count(s:settings.plugin_groups, 'misc')
     let g:startify_change_to_vcs_root=1
     let g:startify_show_sessions=0
     let g:startify_restore_position=0
-    let g:startify_files_number=40
+    let g:startify_files_number=45
     let g:startify_change_to_vcs_root=1
     let g:startify_custom_header=map(split(system('fortune'), '\n'), '"   ". v:val') + ['']
     let g:startify_list_order=[
@@ -1536,9 +1536,9 @@ if count(s:settings.plugin_groups, 'misc')
     let g:syntastic_style_warning_symbol = '≈'
     noremap <leader>1  :AutoSaveToggle<cr>
     NeoBundle 'phongvcao/vim-stardict' " Looking up meaning of words inside Vim, Bash and Zsh using StarDict Command-Line Version (SDCV) dictionary program.
-    let g:stardict_split_horizontal=1
-    let g:stardict_split_size=20
-    let g:stardict_prefer_python3=0
+    let g:stardict_split_horizontal=0
+    let g:stardict_split_size=80
+    let g:stardict_prefer_python3=1
     nnoremap <leader>hh :StarDict<Space>
     nnoremap <leader>h :StarDictCursor<CR>
     set keywordprg=~/.local/bin/trans\ :tr+en " https://github.com/soimort/translate-shell - Shift-k
@@ -1582,7 +1582,7 @@ if count(s:settings.plugin_groups, 'misc')
     NeoBundle 'vim-scripts/utl.vim' " Univeral Text Linking - Execute URLs, footnotes, open emails, organize ideas
     "NeoBundle 'itchyny/vim-cursorword' " Underlines the word under the cursor
     NeoBundle 'myusuf3/numbers.vim' " numbers.vim is a vim plugin for better line numbers
-    let g:numbers_exclude = ['unite', 'tagbar', 'vimfiler', 'startify', 'undotree', 'vim-stardict']
+    let g:numbers_exclude = ['unite', 'tagbar', 'vimfiler', 'startify', 'undotree', 'vim-stardict', 'stardict']
     let g:enable_numbers = 0
     "nnoremap <silent> <leader>3 :NumbersToggle<CR>
     "autocmd FocusLost * :set number
