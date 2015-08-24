@@ -1537,7 +1537,7 @@ if count(s:settings.plugin_groups, 'misc')
     noremap <leader>1  :AutoSaveToggle<cr>
     NeoBundle 'phongvcao/vim-stardict' " Looking up meaning of words inside Vim, Bash and Zsh using StarDict Command-Line Version (SDCV) dictionary program.
     let g:stardict_split_horizontal=0
-    let g:stardict_split_size=80
+    let g:stardict_split_size=70
     let g:stardict_prefer_python3=1
     nnoremap <leader>hh :StarDict<Space>
     nnoremap <leader>h :StarDictCursor<CR>
