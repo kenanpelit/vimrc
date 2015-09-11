@@ -635,20 +635,20 @@ if count(s:settings.plugin_groups, 'navigation')
     nmap <leader>6 :call NERDComment(0, "toggle")<cr>
     vmap <leader>6 :call NERDComment(0, "toggle")<cr>")"
     NeoBundle 'rhysd/clever-f.vim' " Extended f, F, t and T key mappings for Vim
-    "NeoBundle 'MattesGroeger/vim-bookmarks' " Vim bookmark plugin
-    "let g:bookmark_sign='⚑'
-    "let g:bookmark_highlight_lines=0
-    "let g:bookmark_save_per_working_dir=0
-    "let g:bookmark_manage_per_buffer=0
-    "let g:bookmark_auto_close=1
-    "let g:bookmark_auto_save=1
-    "let g:bookmark_auto_save_file=s:get_cache_dir('bookmark')
-    "let g:bookmark_center=1
-    "let g:bookmark_no_default_key_mappings=0
-    "highlight BookmarkSign ctermbg=NONE ctermfg=1
-    "highlight BookmarkLine ctermbg=240 ctermfg=NONE
-    "highlight BookmarkAnnotationSign ctermbg=NONE ctermfg=190
-    "highlight BookmarkAnnotationLine ctermbg=23 ctermfg=NONE
+    NeoBundle 'MattesGroeger/vim-bookmarks' " Vim bookmark plugin
+    let g:bookmark_sign='⚑'
+    let g:bookmark_highlight_lines=0
+    let g:bookmark_save_per_working_dir=1
+    let g:bookmark_manage_per_buffer=0
+    let g:bookmark_auto_close=1
+    let g:bookmark_auto_save=1
+    let g:bookmark_auto_save_file=s:get_cache_dir('bookmark')
+    let g:bookmark_center=1
+    let g:bookmark_no_default_key_mappings=0
+    highlight BookmarkSign ctermbg=NONE ctermfg=1
+    highlight BookmarkLine ctermbg=240 ctermfg=NONE
+    highlight BookmarkAnnotationSign ctermbg=NONE ctermfg=190
+    highlight BookmarkAnnotationLine ctermbg=23 ctermfg=NONE
     NeoBundleLazy 'majutsushi/tagbar', {'autoload':{'commands':'TagbarToggle'}} " Vim plugin that displays tags in a window, ordered by
     nnoremap <silent> <leader>4 :TagbarToggle<CR>
     NeoBundle 'easymotion/vim-easymotion' " Vim motions on speed!
@@ -1097,7 +1097,7 @@ let g:unite_source_menu_menus.neobundle.command_candidates = [
             \['▷ neobundle lazy',
             \'Unite neobundle/lazy'],
             \['▷ neobundle update',
-            \'Unite neobundle/update'],
+            \'Unite output:NeoBundleUpdate'],
             \['▷ neobundle search',
             \'Unite neobundle/search'],
             \['▷ neobundle install',
@@ -1499,7 +1499,7 @@ if count(s:settings.plugin_groups, 'misc')
     let g:startify_restore_position=0
     let g:startify_files_number=45
     let g:startify_change_to_vcs_root=1
-    let g:startify_custom_header=map(split(system('fortune'), '\n'), '"   ". v:val') + ['']
+    "let g:startify_custom_header=map(split(system('fortune'), '\n'), '"   ". v:val') + ['']
     let g:startify_list_order=[
                 \ ['=== Recent files:'], 'files',
                 \ ['=== Sessions:'], 'sessions',
@@ -1570,7 +1570,7 @@ if count(s:settings.plugin_groups, 'misc')
     highlight ExtraWhitespace ctermbg=yellow
     nnoremap <silent> <leader>0 :StripWhitespace<CR>
     NeoBundleLazy 'zhaocai/GoldenView.Vim', {'autoload':{'mappings':['<Plug>ToggleGoldenViewAutoResize']}} " Always have a nice view for vim split windows!
-    let g:goldenview_enable_at_startup=0
+    let g:goldenview_enable_at_startup=1
     let g:goldenview__enable_default_mapping=0
     nmap <F4> <Plug>ToggleGoldenViewAutoResize
     nmap <silent> <C-g>  <Plug>GoldenViewSplit
